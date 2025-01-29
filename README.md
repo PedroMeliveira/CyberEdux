@@ -1,3 +1,3 @@
 # CyberEdux
  
-Pasta para organização dos códigos referente ao Curso de Python CyberEdux
+Github para organização dos códigos referente ao Curso de Python CyberEdux
