@@ -3,12 +3,13 @@ import ex2_funcoes as fun
 tarefas = []
 
 while True:
-    print(f'Bem vindo ao seu Gerenciador de tarefas! ')
+
+    print(f'\nBem vindo ao seu Gerenciador de tarefas! ')
 
     print(f'1 - Ver tarefas')
     print(f'2 - Adicionar tarefa')
     print(f'3 - Remover tarefa')
-    print(f'0 - Sair')
+    print(f'0 - Sair\n')
 
     escolha = fun.escolher_opcao(0,3)
 
@@ -24,7 +25,7 @@ while True:
                 qntd_tarefas = int(input(f'Deseja adicionar quantas tarefas? '))
                 
                 while qntd_tarefas <= 0:
-                    print(f'Digite um número válido!')
+                    print(f'\nDigite um número válido!\n')
                     qntd_tarefas = int(input(f'Deseja adicionar quantas tarefas? '))
                 break 
             except ValueError:   
@@ -47,14 +48,14 @@ while True:
                 fun.print_tarefas(tarefas)
                 while True:
                     try:
-                        del_tarefa = int(input(f'Digite o número da tarefa que deseja remover: '))
+                        del_tarefa = int(input(f'\nDigite o número da tarefa que deseja remover: '))
                         del tarefas[del_tarefa - 1]
                         break
                     except:
-                        print(f'Número inválido. Tente novamente.')
+                        print(f'\nNúmero inválido. Tente novamente.')
                 break
             else: 
-                print(f'Você não possui tarefas ainda. Adicione tarefas para depois remove-las.')
+                print(f'\nVocê não possui tarefas ainda. Adicione tarefas para depois remove-las.')
                 break
     elif escolha == 0:
         break
