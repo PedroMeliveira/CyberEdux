@@ -12,14 +12,24 @@ def escolher_opcao(min, max):
         except ValueError:
             print(f'Opção INVÁLIDA!')
 
+def print_tarefas_prioridade(tarefas):
+    i = 1
+    for tarefa in tarefas:
+        for nome_tarefa in tarefa.keys():
+            for prioridade in tarefa.values():
+                if prioridade:
+                    print(f'{i} - {nome_tarefa} (PRIORIDADE)')
+                    i += 1
+    for tarefa in tarefas:
+        for nome_tarefa in tarefa.keys():
+            for prioridade in tarefa.values():
+                if not prioridade:
+                    print(f'{i} - {nome_tarefa}')
+                    i += 1
+
 def print_tarefas(tarefas):
     i = 1
-    for tarefa in tarefas.keys():
-        if tarefas[tarefa]['prioridade']:
-            print(f'{i} - {tarefa} (PRIORIDADE).')
+    for tarefa in tarefas:
+        for nome_tarefa in tarefas.keys():
+            print(f'{i} - {nome_tarefa}')
             i += 1
-    for tarefa in tarefas.keys():
-        if not tarefas[tarefa]['prioridade']:
-            print(f'{i} - {tarefa}.')
-            i += 1
-            
