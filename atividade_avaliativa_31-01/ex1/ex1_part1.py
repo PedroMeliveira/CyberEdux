@@ -1,27 +1,31 @@
 import csv
 import re
 
-with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
 
 # Quantas requisições de cada método foram feitas? 
-
     requisições = {}
     qntd_get = qntd_post = 0
     for linha in leitor:
         metodo = linha[2].split(',')
-        if metodo[0] not in requisições and (metodo[0] == 'GET' or metodo[0] == 'POST'):
-            requisições[metodo[0]] = 1
-        elif metodo[0] in requisições:
-            requisições[metodo[0]] += 1
-    
+        requisição = metodo[0][:4]
+        if requisição not in requisições and requisição == 'GET ': 
+            requisições[requisição] = 1
+        elif requisição in requisições:
+            requisições[requisição] += 1
+        if requisição not in requisições and requisição == 'POST':
+            requisições[requisição] = 1
+        elif requisição in requisições:
+            requisições[requisição] += 1
+
     for metodo, qnt in requisições.items():
         print(f'\nO método {metodo} foi usado {qnt} vezes.')
 
 # Quais os IPs que mais acessaram?
 
-with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
     ips = {}
@@ -44,7 +48,7 @@ with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
 
 # Quantas requisições com status de erro tiveram?
 
-with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
     qnt_erro = 0
@@ -57,19 +61,28 @@ with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
 
 # Qual foi o dia que mais teve requisições?
 
-with open('atividade_avaliativa_31-01/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
-    datas = []
-    i = 0
-
-    #[29/Nov/2017:06:58:55
+    datas = {}
 
     for linha in leitor:
         data = linha[1].split(',')
-        if data[0] not in datas:
-            datas.append(data[0])
-            i += 1
-        if i > 10:
+        dia = data[0][1:12]
+        pattern = '[\d]{2}[/][A-Z][a-z]{2}[/][\d]{4}'
+        if dia not in datas and re.search(pattern, dia):
+            datas[dia] = 1
+        elif dia in datas:
+            datas[dia] += 1
+    
+    datas = dict(sorted(datas.items(), key=lambda item: item[1], reverse=True))
+    
+    i = 1
+
+    print('\nOs dias que mais tiveram requisições:')
+
+    for dia, qnt in datas.items():
+        print(f'{i} - {dia}: {qnt} vezes.')
+        i += 1
+        if i == 6:
             break
-    print(datas)
