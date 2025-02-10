@@ -127,8 +127,20 @@ with open('aula_10-02/emails_msg.csv', 'r') as arquivo:
         servidor.starttls()
         servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
         msg = EmailMessage()
-        msg['Subject'] = 'Relatório Semanal'
+        msg['Subject'] = 'Felicidade'
         msg['From'] = 'pedro.melchiordeoliveira@gmail.com'
         msg['To'] = email
         msg.set_content(mensagem)
         servidor.send_message(msg)
+
+# Envie um relatório em pdf diariamente às 9h para uma lista de emails
+
+# import schedule
+# import time
+# def enviar_email():
+#     # Lógica de envio de e-mail aqui
+#     print("E-mail enviado!")
+# schedule.every().day.at("09:00").do(enviar_email)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
