@@ -1,8 +1,8 @@
 import csv
 import re
 
-with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
-    leitor = csv.reader(arquivo)
+# with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
+#     leitor = csv.reader(arquivo)
 
 
 
@@ -26,31 +26,51 @@ with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', e
 
 # Dias que tiveram mais requisições?
 
+# with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
+#     leitor = csv.reader(arquivo)
+
+#     datas = {}
+
+#     for linha in leitor:
+#         data = linha[1].split(',')
+#         dia = data[0][:11]
+#         pattern = '[\d]{4}[-][\d]{2}[-][\d]{2}'
+#         if dia not in datas and re.search(pattern, dia):
+#             datas[dia] = 1
+#         elif dia in datas:
+#             datas[dia] += 1
+
+#     datas = dict(sorted(datas.items(), key=lambda item: item[1], reverse=True))
+
+
+#     print('\nOs dias que mais tiveram requisições:\n')
+#     i = 1
+#     for dia, qnt in datas.items():
+#         print(f'{i} - {dia}: {qnt} vezes.')
+#         i += 1
+#         if i == 6:
+#             print()
+#             break
+
 with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
     leitor = csv.reader(arquivo)
-
-    datas = {}
+    
+    titulos = {}
 
     for linha in leitor:
-        data = linha[1].split(',')
-        dia = data[0][:11]
-        pattern = '[\d]{4}[-][\d]{2}[-][\d]{2}'
-        if dia not in datas and re.search(pattern, dia):
-            datas[dia] = 1
-        elif dia in datas:
-            datas[dia] += 1
+        titulo = (linha[4].split(','))[0]
+        if titulo not in titulos:
+            titulos[titulo] = 1
+        else:
+            titulos[titulo] += 1
 
-    datas = dict(sorted(datas.items(), key=lambda item: item[1], reverse=True))
+    titulos = dict(sorted(titulos.items(), key=lambda item: item[1], reverse=True))
 
-
-    print('\nOs dias que mais tiveram requisições:\n')
+    print(f'\nOs títulos mais assistidos foram:\n')
     i = 1
-    for dia, qnt in datas.items():
-        print(f'{i} - {dia}: {qnt} vezes.')
+    for titulo, qnt in titulos.items():
+        print(f'{i} - {titulo}: {qnt} vezes.')
         i += 1
-        if i == 6:
+        if i == 11:
             print()
             break
-    
-
-   
