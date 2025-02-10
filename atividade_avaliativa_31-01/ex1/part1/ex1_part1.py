@@ -1,7 +1,7 @@
 import csv
 import re
 
-with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/part1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
 
@@ -25,7 +25,7 @@ with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
 
 # Quais os IPs que mais acessaram?
 
-with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/part1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
     ips = {}
@@ -48,7 +48,7 @@ with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
 
 # Quantas requisições com status de erro tiveram?
 
-with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/part1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
     qnt_erro = 0
@@ -61,7 +61,7 @@ with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
 
 # Qual foi o dia que mais teve requisições?
 
-with open('atividade_avaliativa_31-01/ex1/weblog.csv', 'r') as arquivo:
+with open('atividade_avaliativa_31-01/ex1/part1/weblog.csv', 'r') as arquivo:
     leitor = csv.reader(arquivo)
 
     datas = {}
