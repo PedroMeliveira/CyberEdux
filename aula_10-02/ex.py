@@ -1,6 +1,6 @@
 # Método SMTP
 
-import smtplib
+# import smtplib
 # zozt npry nlfh cgfp
 
 # servidor = smtplib.SMTP('smtp.gmail.com', 587)
@@ -82,30 +82,53 @@ import smtplib
 
 # Função para enviar emails para uma lista de destinatários com mensagens personalizadas.
 
+# import smtplib
+# from email.message import EmailMessage
+
+
+# servidor = smtplib.SMTP('smtp.gmail.com', 587)
+# servidor.starttls()
+# servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
+
+
+
+# lista_destinatarios = ['pedro.melchiordeoliveira@gmail.com', 'pedro.oliveira10@sou.ufmt.br', 'pedrinpmo879@gmail.com']
+
+# def enviar_email(lista):
+
+#     servidor = smtplib.SMTP('smtp.gmail.com', 587)
+#     servidor.starttls()
+#     servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
+
+#     for destinatario in lista:
+#         msg = EmailMessage()
+#         msg['Subject'] = 'Relatório Semanal'
+#         msg['From'] = 'pedro.melchiordeoliveira@gmail.com'
+#         msg['To'] = destinatario
+#         msg.set_content(f'Olá {destinatario[:destinatario.find('@')]}')
+#         servidor.send_message(msg)
+
+# enviar_email(lista_destinatarios)
+
+# Script que leia um arquivo csv com uma lista de destinatários e suas mensagens e envie os emails
+
+import csv
 import smtplib
 from email.message import EmailMessage
 
+with open('aula_10-02/emails_msg.csv', 'r') as arquivo:
+    conteudo = csv.reader(arquivo)
 
-servidor = smtplib.SMTP('smtp.gmail.com', 587)
-servidor.starttls()
-servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
+    for linha in conteudo:
+        email = linha[0]
+        mensagem = linha[1]
 
-
-
-lista_destinatarios = ['pedro.melchiordeoliveira@gmail.com', 'pedro.oliveira10@sou.ufmt.br', 'pedrinpmo879@gmail.com']
-
-def enviar_email(lista):
-
-    servidor = smtplib.SMTP('smtp.gmail.com', 587)
-    servidor.starttls()
-    servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
-
-    for destinatario in lista:
+        servidor = smtplib.SMTP('smtp.gmail.com', 587)
+        servidor.starttls()
+        servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
         msg = EmailMessage()
         msg['Subject'] = 'Relatório Semanal'
         msg['From'] = 'pedro.melchiordeoliveira@gmail.com'
-        msg['To'] = destinatario
-        msg.set_content(f'Olá {destinatario[:destinatario.find('@')]}')
+        msg['To'] = email
+        msg.set_content(mensagem)
         servidor.send_message(msg)
-
-enviar_email(lista_destinatarios)
