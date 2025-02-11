@@ -54,7 +54,7 @@ for config in dados.keys():
 #     print(f'(4)- Ver todos os Contatos')
 #     print(f'(5)- Sair')
 
-#     escolha = filtra_escolha(1, 5)
+#     escolha = filtra_escolha(1, 5) teste
 
 
 #     if escolha == 1:
