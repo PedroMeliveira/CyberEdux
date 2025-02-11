@@ -48,7 +48,7 @@ while True:
         
         else:
             i = 1
-            print(f'\n{'='*5}LISTA DE CONTATOS{'='*5}\n')
+            print(f'\n====== LISTA DE CONTATOS ======\n')
             for nome, telefone in contatos.items():
                 print(f'{i} - {nome}: {telefone}')
                 i += 1
@@ -56,7 +56,7 @@ while True:
     elif escolha == 2:
         while True:
             try:
-                qnt = int(input(f'\nQuantos contatos você deseja adicinoar? '))
+                qnt = int(input(f'\nQuantos contatos você deseja adicionar? '))
                 adicionar_contatos(qnt)
                 break
 
@@ -71,7 +71,7 @@ while True:
         
         else:
             i = 1
-            print(f'\n{'='*5}LISTA DE CONTATOS{'='*5}')
+            print(f'\n====== LISTA DE CONTATOS ======\n')
             for nome, telefone in contatos.items():
                 print(f'{i} - {nome}: {telefone}')
                 i += 1
@@ -83,10 +83,14 @@ while True:
                         contato_remover = int(input('\nDigite a opção do contato que deseja remover: '))
 
                     del contatos[list(contatos)[contato_remover - 1]]
-                
-                except ValueError:
-                    print(f'Opção Inválida! Tente novamente.')
 
+                    break
+
+                except ValueError:
+                    print(f'\nOpção Inválida! Tente novamente.')
+
+    else:
+        break
 
 
 
