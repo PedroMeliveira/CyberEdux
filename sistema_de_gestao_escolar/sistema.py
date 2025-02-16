@@ -8,4 +8,7 @@ while True:
 
     escolha = fun.função_escolha(0, 5)
 
-    # if escolha == 1:
+    fun.adicionar_aluno(alunos)
+    print(alunos)
+
+    break
