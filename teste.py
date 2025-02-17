@@ -1,3 +1,6 @@
-dicionario = {'nome': 1233, 'idade': 22222}
+import csv
 
-print(1233 in dicionario.values())
+with open("saida.csv", "w", newline="") as arquivo:
+    escritor = csv.writer(arquivo)
+    escritor.writerow(["Nome", "Idade", "Cidade"])
+    escritor.writerow(["João", 30, "São Paulo"])

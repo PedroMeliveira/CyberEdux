@@ -1,4 +1,5 @@
 import re
+import csv
 
 def menu():
     print(f'\n======SISTEMA DE GESTÃO ESCOLAR EM TERMINAL======\n')
@@ -34,11 +35,11 @@ def adicionar_aluno(lista):
             
     matricula = input(f'\nMatricula, (XXXXXXXXX): ')
     while True:
-        if validar_matricula(matricula):
+        if validar_matricula(matricula, lista):
             print(f'\nMatricula válida!')
             break
-        matricula = input(f'\nMatricula inválida, tente novamente: ')
-
+        matricula = input(f'\nTente novamente: ')
+        
     data = input(f'\nData de Nascimento, (XX/XX/XXXX): ')
     while True:
         if validar_data(data):
@@ -84,6 +85,29 @@ def adicionar_aluno(lista):
 
     lista.append([nome, matricula, data, notas, round(100 * (qnt_faltas/qnt_aulas), 2)])
 
+    atualiza_arquivo(lista)
+
+
+def remover_aluno(lista):
+    while True:
+        matricula = input(f'\nDigite a matricula do aluno, que deseja remover do sistema: ')
+        achou = False
+        for i in range(len(lista)):
+            if matricula == lista[i][1]:
+                del lista[i]
+                print(f'\nAluno removido com sucesso!')
+                atualiza_arquivo(lista)
+                achou = True
+                break
+        if achou:
+            break
+        print(f'\nMatricula não encontrada! Tente novamente. ')
+
+def listar_alunos(lista):
+    for aluno in lista:
+        print(f'{aluno[0]} - {aluno[1]} - {aluno[3]} - {aluno[4]}% de Faltas.')
+        
+
 
 def validar_data(data):
     pattern = "(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19[5-9][0-9]|202[0-5]|20[0-1][0-9])"
@@ -93,9 +117,14 @@ def validar_data(data):
     else:
         return False
     
-def validar_matricula(matricula):
+def validar_matricula(matricula, lista):
     if any(chr.isalpha() for chr in matricula) or len(matricula) != 9:
+        print(f'\nMatricula inválida!')
         return False
+    for i in range(len(lista)):
+        if matricula == lista[i][1]:
+            print(f'\nMatricula já esta em uso!')
+            return False
     return True
     
 def validar_nome(nome):
@@ -140,3 +169,10 @@ def matricula_unica(matricula, lista):
             return False
         
     return True
+
+
+def atualiza_arquivo(lista):
+    with open('sistema_de_gestao_escolar/alunos.csv', 'w', newline="") as arquivo:
+        escritor = csv.writer(arquivo)
+        for i in range(len(lista)):
+            escritor.writerow(lista[i])
