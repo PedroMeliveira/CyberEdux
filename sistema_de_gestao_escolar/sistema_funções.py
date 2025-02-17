@@ -26,14 +26,18 @@ def adicionar_aluno(lista):
     print(f'\nPreencha as informações do aluno para adicionar-lo ao sistema.')
 
     nome = input(f'\nNome: ')
-
+    while True:
+        if validar_nome(nome):
+            print(f'\nNome válido')
+            break
+        nome = input(f'\nNome inválido, tente novamente: ')
+            
     matricula = input(f'\nMatricula, (XXXXXXXXX): ')
     while True:
         if validar_matricula(matricula):
             print(f'\nMatricula válida!')
             break
-        else:
-            matricula = input(f'\nMatricula inválida, tente novamente: ')
+        matricula = input(f'\nMatricula inválida, tente novamente: ')
 
     data = input(f'\nData de Nascimento, (XX/XX/XXXX): ')
     while True:
@@ -44,38 +48,41 @@ def adicionar_aluno(lista):
             data = input(f'\nData inválida, tente novamente: ')
 
     msg = f'\nQuantas disciplinas devemos adicionar no registro desse aluno, (Mínimo de 3 disciplinas): '
-    qnt_disc = função_try_int(qnt_disc, msg)
+    qnt_disc = função_try_int( msg)
     while qnt_disc < 3:
         print(f'\nNo mínimo 3 disciplinas! ')
-        qnt_disc = função_try_int(qnt_disc, msg)
+        qnt_disc = função_try_int(msg)
 
     disciplinas = ['Português', 'Matemática', 'Geografia', 'História', 'Física', 'Química', 'Biologia']
     for i, disc in enumerate(disciplinas):
         print(f'{i + 1} - {disc}')
+
     notas = {}
+
     for i in range(qnt_disc):
         msg = f'\nOpção da {i + 1}º disciplina: '
-        disc = função_try_int(disc, msg)
-        while disc < 1 and disc > 7:
-            print(f'\nEscolha uma opção entre 1 e 7')
-            disc = função_try_int(disc, msg)
-
+        disc = verifica_disc(disciplinas, notas, msg)
+        
         msg = f'\nNota de {disciplinas[disc - 1]}: '
-        nota = função_try_float(nota, msg)
-        while nota < 0 and nota > 10:
+        nota = função_try_float(msg)
+        while nota < 0 or nota > 10:
             print(f'\nA nota deve ser entre 0 e 10! ')
-            nota = função_try_float(nota, msg)
+            nota = função_try_float(msg)
         notas[disciplinas[disc - 1]] = nota
 
     msg = f'\nQuantas aulas esse aluno já teve? '
-    qnt_aulas = função_try_int(qnt_aulas, msg)
-    while qnt_aulas < 0:
+    qnt_aulas = função_try_int(msg)
+    while qnt_aulas <= 0:
         print(f'\nDigite um valor positivo! ')
-        qnt_aulas = função_try_int(qnt_aulas, msg)
+        qnt_aulas = função_try_int(msg)
 
-    qnt_faltas = int(input(f'\nQuantas faltas esse aluno já teve? '))
+    msg = f'\nQuantas faltas esse aluno já teve? '
+    qnt_faltas = função_try_int(msg)
+    while qnt_faltas < 0:
+        print(f'\nDigite um valor válido! ')
+        qnt_faltas = função_try_int(msg)
 
-    lista.append([nome, matricula, data, notas, 100 * (qnt_faltas/qnt_aulas)])
+    lista.append([nome, matricula, data, notas, round(100 * (qnt_faltas/qnt_aulas), 2)])
 
 
 def validar_data(data):
@@ -89,10 +96,14 @@ def validar_data(data):
 def validar_matricula(matricula):
     if any(chr.isalpha() for chr in matricula) or len(matricula) != 9:
         return False
-    else:
-        return True
+    return True
+    
+def validar_nome(nome):
+    if any(chr.isdigit() for chr in nome):
+        return False
+    return True
 
-def função_try_int(var, msg):
+def função_try_int(msg):
     while True:
         try:
             var = int(input(msg))
@@ -101,10 +112,31 @@ def função_try_int(var, msg):
             print(f'\nEntrada inválida, tente novamente. ')
 
 
-def função_try_float(var, msg):
+def função_try_float(msg):
     while True:
         try:
             var = float(input(msg))
             return var
         except ValueError:
             print(f'\nEntrada inválida, tente novamente. ')
+
+
+def verifica_disc(disciplinas, lista, msg):
+    disc = função_try_int(msg)
+    while disciplinas[disc - 1] in lista or (disc < 1 and disc > 7):
+        if disciplinas[disc - 1] in lista:
+            print(f'\nEssa matéria já foi escolhida, tente outra.')
+            disc = função_try_int(msg)
+
+        if disc < 1 and disc > 7:
+            print(f'\nEscolha uma opção entre 1 e 7')
+            disc = função_try_int(msg)
+
+    return disc
+
+def matricula_unica(matricula, lista):
+    for i in len(lista):
+        if matricula == lista[i][1]:
+            return False
+        
+    return True
