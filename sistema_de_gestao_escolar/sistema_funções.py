@@ -1,5 +1,7 @@
 import re
 import csv
+from docx import Document
+from openpyxl import Workbook
 
 def menu():
     print(f'\n======SISTEMA DE GESTÃO ESCOLAR EM TERMINAL======\n')
@@ -55,35 +57,40 @@ def adicionar_aluno(lista):
         qnt_disc = função_try_int(msg)
 
     disciplinas = ['Português', 'Matemática', 'Geografia', 'História', 'Física', 'Química', 'Biologia']
-    for i, disc in enumerate(disciplinas):
-        print(f'{i + 1} - {disc}')
 
     notas = {}
 
     for i in range(qnt_disc):
+        for n, disc in enumerate(disciplinas):
+            print(f'{n + 1} - {disc}')
+
         msg = f'\nOpção da {i + 1}º disciplina: '
-        disc = verifica_disc(disciplinas, notas, msg)
+        disc = verifica_disc(disciplinas, msg)
         
         msg = f'\nNota de {disciplinas[disc - 1]}: '
         nota = função_try_float(msg)
         while nota < 0 or nota > 10:
             print(f'\nA nota deve ser entre 0 e 10! ')
             nota = função_try_float(msg)
+        
         notas[disciplinas[disc - 1]] = nota
+    
+        del disciplinas[disc - 1]
 
-    msg = f'\nQuantas aulas esse aluno já teve? '
-    qnt_aulas = função_try_int(msg)
-    while qnt_aulas <= 0:
-        print(f'\nDigite um valor positivo! ')
-        qnt_aulas = função_try_int(msg)
+    soma = 0
+    for nota in notas.values():
+        soma += nota
+    media = round(soma/qnt_disc, 2)
 
-    msg = f'\nQuantas faltas esse aluno já teve? '
+
+    msg = f'\nQual a porcentagem de faltas desse aluno? '
     qnt_faltas = função_try_int(msg)
-    while qnt_faltas < 0:
+    while qnt_faltas < 0 or qnt_faltas > 100:
         print(f'\nDigite um valor válido! ')
         qnt_faltas = função_try_int(msg)
 
-    lista.append([nome, matricula, data, notas, round(100 * (qnt_faltas/qnt_aulas), 2)])
+
+    lista.append([nome, matricula, data, notas, media, qnt_faltas])
 
     atualiza_arquivo(lista)
 
@@ -105,7 +112,7 @@ def remover_aluno(lista):
 
 def listar_alunos(lista):
     for aluno in lista:
-        print(f'{aluno[0]} - {aluno[1]} - {aluno[3]} - {aluno[4]}% de Faltas.')
+        print(f'{aluno[0]} - {aluno[1]} - {aluno[3]} - {aluno[5]}% de Faltas.')
         
 
 
@@ -150,16 +157,11 @@ def função_try_float(msg):
             print(f'\nEntrada inválida, tente novamente. ')
 
 
-def verifica_disc(disciplinas, lista, msg):
+def verifica_disc(lista, msg):
     disc = função_try_int(msg)
-    while disciplinas[disc - 1] in lista or (disc < 1 and disc > 7):
-        if disciplinas[disc - 1] in lista:
-            print(f'\nEssa matéria já foi escolhida, tente outra.')
-            disc = função_try_int(msg)
-
-        if disc < 1 and disc > 7:
-            print(f'\nEscolha uma opção entre 1 e 7')
-            disc = função_try_int(msg)
+    while (disc < 1 or disc > len(lista)):
+        print(f'\nEscolha uma opção entre 1 e {len(lista)}')
+        disc = função_try_int(msg)
 
     return disc
 
@@ -176,3 +178,64 @@ def atualiza_arquivo(lista):
         escritor = csv.writer(arquivo)
         for i in range(len(lista)):
             escritor.writerow(lista[i])
+
+
+def relatorio_word_unico(matricula, lista):
+    for i in range(len(lista)):
+        if matricula == lista[i][1]:
+            break
+    
+    doc = Document()
+
+    doc.add_heading(f'Relatório de {lista[i][0]}', level=0)
+    doc.add_paragraph(f'Nome: {lista[i][0]}')
+    doc.add_paragraph(f'Matricula: {lista[i][1]}')
+    doc.add_paragraph(f'Data de Nascimento: {lista[i][2]}')
+    doc.add_paragraph(f'Notas: {lista[i][3]}')
+    doc.add_paragraph(f'Média: {lista[i][4]}')
+    doc.add_paragraph(f'Faltas: {lista[i][5]}%')
+    if lista[i][4] < 7 or lista[i][5] > 25:
+        doc.add_paragraph(f'Status de aprovação: Reprovado')
+    else:
+        doc.add_paragraph(f'Status de aprovação: Aprovado')
+
+    doc.save(f'sistema_de_gestao_escolar/{lista[i][1]}_relatorio.docx')
+    print(f'Relatório criado com sucesso! ')
+    
+def relatorio_word_grupo(lista):
+    doc = Document()
+
+    doc.add_heading('Relatório dos Alunos', level=0)
+
+    for aluno in lista:
+        doc.add_heading(f'Relatório de {aluno[0]}', level=1)
+        doc.add_paragraph(f'Nome: {aluno[0]}')
+        doc.add_paragraph(f'Matricula: {aluno[1]}')
+        doc.add_paragraph(f'Data de Nascimento: {aluno[2]}')
+        doc.add_paragraph(f'Notas: {aluno[3]}')
+        doc.add_paragraph(f'Média: {aluno[4]}')
+        doc.add_paragraph(f'Faltas: {aluno[5]}%')
+
+        print(f'{aluno[4]}')
+        if float(aluno[4]) < 7 or float(aluno[5]) > 25:
+            doc.add_paragraph(f'Status de aprovação: Reprovado')
+        else:
+            doc.add_paragraph(f'Status de aprovação: Aprovado')
+    
+    doc.save(f'sistema_de_gestao_escolar/relatorio_grupo.docx')
+    print(f'\nRelatório do grupo criado com sucesso! ')
+
+def planilha_excel(lista):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'Alunos'
+
+    cabechalos = ['Nome', 'Matricula', 'Data de Nascimento', 'Notas', 'Média', 'Porcentagem de Faltas', 'Status de Aprovação']
+    ws.append(cabechalos)
+
+    for aluno in lista:
+        status = "Aprovado" if (float(aluno[4]) >= 7 and float(aluno[5]) <= 25) else "Reprovado"
+        ws.append([aluno[0], aluno[1], aluno[2], aluno[3], aluno[4], aluno[5], status])
+    
+    wb.save('sistema_de_gestao_escolar/alunos.xlsx')
+    print(f'Planilha criada com sucesso! ')
