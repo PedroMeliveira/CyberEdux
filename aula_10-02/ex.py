@@ -112,35 +112,47 @@
 
 # Script que leia um arquivo csv com uma lista de destinatários e suas mensagens e envie os emails
 
-import csv
+# import csv
 import smtplib
 from email.message import EmailMessage
 
-with open('aula_10-02/emails_msg.csv', 'r') as arquivo:
-    conteudo = csv.reader(arquivo)
+# with open('aula_10-02/emails_msg.csv', 'r') as arquivo:
+#     conteudo = csv.reader(arquivo)
 
-    for linha in conteudo:
-        email = linha[0]
-        mensagem = linha[1]
+#     for linha in conteudo:
+#         email = linha[0]
+#         mensagem = linha[1]
 
-        servidor = smtplib.SMTP('smtp.gmail.com', 587)
-        servidor.starttls()
-        servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
-        msg = EmailMessage()
-        msg['Subject'] = 'Felicidade'
-        msg['From'] = 'pedro.melchiordeoliveira@gmail.com'
-        msg['To'] = email
-        msg.set_content(mensagem)
-        servidor.send_message(msg)
+#         servidor = smtplib.SMTP('smtp.gmail.com', 587)
+#         servidor.starttls()
+#         servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
+#         msg = EmailMessage()
+#         msg['Subject'] = 'Felicidade'
+#         msg['From'] = 'pedro.melchiordeoliveira@gmail.com'
+#         msg['To'] = email
+#         msg.set_content(mensagem)
+#         servidor.send_message(msg)
 
 # Envie um relatório em pdf diariamente às 9h para uma lista de emails
 
-# import schedule
-# import time
-# def enviar_email():
-#     # Lógica de envio de e-mail aqui
-#     print("E-mail enviado!")
-# schedule.every().day.at("09:00").do(enviar_email)
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+import schedule
+import time
+def enviar_email(email):
+    msg = EmailMessage()
+    msg['Subject'] = 'Relatório Semanal'
+    msg['From'] = 'pedro.melchiordeoliveira@mgial.com'
+    msg['To'] = email
+    msg.set_content('Segue em anexo o relatório semanal.')
+    servidor = smtplib.SMTP('smtp.gmail.com', 587)
+    servidor.starttls()
+    servidor.login('pedro.melchiordeoliveira@gmail.com', 'zozt npry nlfh cgfp')
+    servidor.send_message(msg)
+    print("E-mail enviado!")
+
+schedule.every().day.at("09:00").do(enviar_email('pedro.oliveira10@sou.ufmt.br'))
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+
+
+

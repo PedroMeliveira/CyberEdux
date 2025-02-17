@@ -1,6 +1,7 @@
 # 7763859912:AAEyPAs38QQaF84wY0-n4fb3jmpHc5mcXRk
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
+import csv
 
 # Função para responder ao comando /start
 
@@ -19,6 +20,31 @@ async def help(update: Update, context) -> None:
 
 async def foto(update: Update, context) -> None:
     await update.message.reply_photo('aula_12-02/macaco.jpg')
+
+async def votar(update: Update, context) -> None:
+    with open('aula_12-02/votar.csv', 'r') as arquivo:
+        conteudo = csv.reader(arquivo)
+        dados = []
+        for dado in conteudo:
+            dados.append(dado)
+        await update.message.reply_text(f'O Homem-Aranha é o melhor super-herói? Responda o usando o comando /votar (sim ou não).')
+        if context.args[0].lower()[0] == 's':
+            dados[0][0] += 1
+            await update.message.reply_text(f'Você votou Sim!')
+        elif context.args[0].lower()[0] == 'n':
+            dados[0][1] += 1
+            await update.message.reply_text(f'Você votou Não!')
+    with open('aula_12-02/votar.csv', 'w') as arquivo:
+        escritor = csv.writer(arquivo)
+        escritor.writerow(dados)
+
+async def resultado(update: Update, context) -> None:
+    with open('aula_12-02/votar.csv', 'r') as arquivo:
+        conteudo = csv.reader(arquivo)
+        dados = []
+        for dado in conteudo:
+            dados.append(dado)
+        await update.message.reply_text(f'{dados[0][0]} - Votaram SIM\n{dados[0][1]} - Votaram NÃO')
 
 async def echo(update: Update, context) -> None:
     user_message = update.message.text
@@ -39,6 +65,8 @@ def main():
     application.add_handler(CommandHandler("start", start)) 
     application.add_handler(CommandHandler("hello", hello)) 
     application.add_handler(CommandHandler("help", help)) 
+    application.add_handler(CommandHandler("resultado", resultado)) 
+    application.add_handler(CommandHandler("votar", votar)) 
     application.add_handler(CommandHandler("foto", foto)) 
     application.add_handler(MessageHandler(filters.TEXT, echo)) 
 
