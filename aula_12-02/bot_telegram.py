@@ -5,7 +5,7 @@ import csv
 
 # Função para responder ao comando /start
 
-comandos = ['/start', '/hello', '/help', '/foto']
+comandos = ['/start', '/hello', '/help', '/foto', '/votar', '/resultado']
 
 async def start(update: Update, context) -> None:
     await update.message.reply_text("Olá! Eu sou um bot simples. Envie-me uma mensagem e eu a repetirei.")
