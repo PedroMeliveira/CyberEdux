@@ -68,7 +68,7 @@ Digite uma mensagem de feedback para nos ajudar a melhorar nosso serviço de ate
 def main():
 
 # Insira o token do seu bot aqui
-    token = '8180709283:AAHNAmZFh9rKs13q11PmRUFJKnPjIjObGOs'
+    token = '7599043583:AAEJ6zzdoecDfhLhqLYyBb3r3LdVMeoWaCI'
 
 # Cria a aplicação
     application = Application.builder().token(token).build()
