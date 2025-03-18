@@ -1,0 +1,20 @@
+Exercicios Modelagem de Banco de Dados: MER e DER
+
+Ex 1:
+
+Entidades: Escola, Professor, Aluno, Disciplina e Turma
+
+Ex 2:
+
+ID, Nome, Telefone, DN, Turma
+
+Ex 3:
+
+Professor (Possui)(N:M) Turma
+
+Ex 4:
+
+Raça, DN, ID, Nome, Dono e Peso
+
+Ex 5:
+
