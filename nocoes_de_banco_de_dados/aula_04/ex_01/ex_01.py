@@ -1,6 +1,6 @@
 import sqlite3
 
-conexao = sqlite3.connect('nocoes_de_banco_de_dados/aula_04/biblioteca.db')
+conexao = sqlite3.connect('nocoes_de_banco_de_dados/aula_04/ex_01/biblioteca.db')
 cursor = conexao.cursor()
 
 cursor.execute('''
