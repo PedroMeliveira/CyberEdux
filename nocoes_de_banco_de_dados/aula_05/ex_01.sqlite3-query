@@ -1,0 +1,24 @@
+-- database: ./banco_biblioteca.db
+
+SELECT Livros.Titulo , Autores.Nome 
+FROM Livros
+INNER JOIN Autores ON Livros.AutorID = Autores.ID;
+
+SELECT Livros.Titulo , Autores.Nome 
+FROM Livros
+INNER JOIN Autores ON Livros.AutorID = Autores.ID
+INNER JOIN Emprestimos ON Livros.ID = Emprestimos.LivroID;
+
+SELECT Emprestimos.Leitor, Livros.Titulo
+FROM Emprestimos
+INNER JOIN Livros ON Emprestimos.LivroID = Livros.ID;
+
+SELECT Livros.Titulo
+FROM Livros
+INNER JOIN Autores ON Livros.AutorID = Autores.ID
+WHERE Autores.Nome = 'George Orwell';
+
+SELECT Emprestimos.Leitor, Livros.Titulo, Autores.Nome, Emprestimos.DataEmprestimo
+FROM Livros
+INNER JOIN Emprestimos ON Livros.ID = Emprestimos.LivroID
+INNER JOIN Autores ON livros.AutorID = Autores.ID;
