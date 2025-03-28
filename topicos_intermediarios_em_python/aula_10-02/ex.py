@@ -47,7 +47,7 @@
 # msg.set_content('Segue em anexo o relatório semanal.')
 
 
-# with open('teste.txt', 'rb') as arquivo:
+# with open('topico_intermediarios_em_python/aula_02-10/teste.txt', 'rb') as arquivo:
 #     conteudo = arquivo.read()
 #     msg.add_attachment(conteudo, maintype='application', subtype='txt', filename='teste.txt')
 
@@ -116,7 +116,7 @@
 import smtplib
 from email.message import EmailMessage
 
-# with open('aula_10-02/emails_msg.csv', 'r') as arquivo:
+# with open('topico_intermediarios_em_python/aula_02-10/emails_msg.csv', 'r') as arquivo:
 #     conteudo = csv.reader(arquivo)
 
 #     for linha in conteudo:

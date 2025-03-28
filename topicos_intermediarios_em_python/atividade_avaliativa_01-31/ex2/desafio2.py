@@ -62,7 +62,7 @@ while True:
 
             except ValueError:
                 print(f'\nEntrada inválida! Tente novamente.')
-        with open('atividade_avaliativa_31-01/ex2/contatos.json', 'w') as arquivo:
+        with open('atividade_avaliativa_01-31/ex2/contatos.json', 'w') as arquivo:
             json.dump(contatos, arquivo)
 
     elif escolha == 3:

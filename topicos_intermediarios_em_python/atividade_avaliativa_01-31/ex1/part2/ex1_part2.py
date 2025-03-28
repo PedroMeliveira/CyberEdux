@@ -1,7 +1,7 @@
 import csv
 import re
 
-# with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
+# with open('atividade_avaliativa_01-31/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
 #     leitor = csv.reader(arquivo)
 
 
@@ -26,7 +26,7 @@ import re
 
 # Dias que tiveram mais requisições?
 
-# with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
+# with open('atividade_avaliativa_01-31/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
 #     leitor = csv.reader(arquivo)
 
 #     datas = {}
@@ -52,7 +52,7 @@ import re
 #             print()
 #             break
 
-with open('atividade_avaliativa_31-01/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
+with open('atividade_avaliativa_01-31/ex1/part2/All_ViewingActivity.csv', 'r', encoding="utf8") as arquivo:
     leitor = csv.reader(arquivo)
     
     titulos = {}

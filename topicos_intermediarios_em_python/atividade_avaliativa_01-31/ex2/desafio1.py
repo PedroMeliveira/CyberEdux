@@ -22,7 +22,7 @@ informacoes = {
     "Permissoes" : "audio"
 }
 
-with open('atividade_avaliativa_31-01/ex2/config.json', 'w') as arquivo:
+with open('atividade_avaliativa_01-31/ex2/config.json', 'w') as arquivo:
     json.dump(informacoes, arquivo)
 
 
@@ -43,5 +43,5 @@ while True:
 
     informacoes[list(informacoes)[escolha-1]] = nova_config 
 
-    with open('atividade_avaliativa_31-01/ex2/config.json', 'w') as arquivo:
+    with open('atividade_avaliativa_01-31/ex2/config.json', 'w') as arquivo:
         json.dump(informacoes, arquivo)

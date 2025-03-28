@@ -19,7 +19,7 @@ async def help(update: Update, context) -> None:
         await update.message.reply_text(f'{comando}')
 
 async def foto(update: Update, context) -> None:
-    await update.message.reply_photo('aula_12-02/macaco.jpg')
+    await update.message.reply_photo('topicos_intermediarios_em_python/aula_02-12/macaco.jpg')
 
 async def votar(update: Update, context) -> None:
     with open('aula_12-02/votar.csv', 'r') as arquivo:
@@ -34,12 +34,12 @@ async def votar(update: Update, context) -> None:
         elif context.args[0].lower()[0] == 'n':
             dados[0][1] += 1
             await update.message.reply_text(f'Você votou Não!')
-    with open('aula_12-02/votar.csv', 'w') as arquivo:
+    with open('topicos_intermediarios_em_python/aula_02-12/votar.csv', 'w') as arquivo:
         escritor = csv.writer(arquivo)
         escritor.writerow(dados)
 
 async def resultado(update: Update, context) -> None:
-    with open('aula_12-02/votar.csv', 'r') as arquivo:
+    with open('topicos_intermediarios_em_python/aula_02-12/votar.csv', 'r') as arquivo:
         conteudo = csv.reader(arquivo)
         dados = []
         for dado in conteudo:
