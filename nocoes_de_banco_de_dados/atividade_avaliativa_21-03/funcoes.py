@@ -119,6 +119,19 @@ def cria_tabelas_sql():
     conexao.commit()
 
 
+def insert_cardapio_fixo():
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Hambúrguer Artesanal', '25.90', '15')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pizza Marguerita', '39.90', '20')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Lasanha à Bolonhesa', '34.50', '25')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Frango Grelhado com Legumes', '28.00', '20')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Risoto de Cogumelos', '32.00', '30')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Refrigerante (Coca-Cola)', '6.00', '0')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Suco Natural de Laranja', '8.00', '0')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Água Mineral (500ml)', '3.50', '0')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Sorvete de Chocolate', '12.00', '5')")
+    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pudim de Leite Condensado', '10.00', '10')")
+
+    conexao.commit()
 
 def adicionar_prato():
     opcao_sair()
@@ -182,19 +195,32 @@ def remover_prato():
         else:
             break
 
+def opcao_cardapio():
+    cursor.execute(f'SELECT ID, Nome FROM Pratos')
 
-def insert_cardapio_fixo():
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Hambúrguer Artesanal', '25.90', '15')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pizza Marguerita', '39.90', '20')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Lasanha à Bolonhesa', '34.50', '25')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Frango Grelhado com Legumes', '28.00', '20')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Risoto de Cogumelos', '32.00', '30')")
+    pratos = cursor.fetchall()
 
-    cursor.execute(f"INSERT INTO Bebidas (Nome, Valor, Tempo_Espera) VALUES ('Refrigerante (Coca-Cola)', '6.00', '0')")
-    cursor.execute(f"INSERT INTO Bebidas (Nome, Valor, Tempo_Espera) VALUES ('Suco Natural de Laranja', '8.00', '0')")
-    cursor.execute(f"INSERT INTO Bebidas (Nome, Valor, Tempo_Espera) VALUES ('Água Mineral (500ml)', '3.50', '0')")
+    print(f'\n===========================================')
+    for i, prato in enumerate(pratos):
+        print(f'({i + 1}) - {prato}')
+    print(f'\n===========================================')
 
-    cursor.execute(f"INSERT INTO Sobremesas (Nome, Valor, Tempo_Espera) VALUES ('Sorvete de Chocolate', '12.00', '5')")
-    cursor.execute(f"INSERT INTO Sobremesas (Nome, Valor, Tempo_Espera) VALUES ('Pudim de Leite Condensado', '10.00', '10')")
 
-    conexao.commit()
+def fazer_pedido():
+    opcao_sair()
+
+    nome_cliente = input(f'\nNome: ')
+    
+    if nome_cliente.lower() != 'sair':
+        email = input(f'\nEmail: ')
+
+        endereço = input(f'\nLocal para entrega: ')
+
+        while True:
+            opcao_cardapio()
+
+            cursor.execute(f'SELECT ID, Nome FROM Pratos')
+
+            pratos = cursor.fetchall()
+            
+            prato = escolha(1, len(pratos))
