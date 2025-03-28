@@ -237,5 +237,5 @@ def planilha_excel(lista):
         status = "Aprovado" if (float(aluno[4]) >= 7 and float(aluno[5]) <= 25) else "Reprovado"
         ws.append([aluno[0], aluno[1], aluno[2], aluno[3], aluno[4], aluno[5], status])
     
-    wb.save('sistema_de_gestao_escolar/alunos.xlsx')
+    wb.save('topicos_intermediarios_em_python_/sistema_de_gestao_escolar/alunos.xlsx')
     print(f'Planilha criada com sucesso! ')

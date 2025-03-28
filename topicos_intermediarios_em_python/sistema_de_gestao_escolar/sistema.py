@@ -4,7 +4,7 @@ import csv
 alunos = []
 
 try:
-    with open("sistema_de_gestao_escolar/alunos.csv", "r") as arquivo:
+    with open("topicos_intermediarios_em_python/sistema_de_gestao_escolar/alunos.csv", "r") as arquivo:
         leitor = csv.reader(arquivo)
         for linha in leitor:
             alunos.append(linha)
