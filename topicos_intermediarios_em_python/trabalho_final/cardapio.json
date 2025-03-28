@@ -1,0 +1,70 @@
+{
+  "entradas": {
+    "Batata Frita": [
+      12.5,
+      15
+    ],
+    "Salada": [
+      18.9,
+      10
+    ],
+    "Sopa de Cebola": [
+      15.0,
+      20
+    ]
+  },
+  "principais": {
+    "Fil\u00e9 \u00e0 Parmegiana": [
+      38.9,
+      45
+    ],
+    "Salm\u00e3o Grelhado": [
+      42.5,
+      45
+    ],
+    "Risoto de Camar\u00e3o": [
+      35.0,
+      60
+    ],
+    "Queijo": [
+      11.0,
+      15
+    ],
+    "Fil\u00e9 de Frango": [
+      31.5,
+      25
+    ]
+  },
+  "sobremesas": {
+    "Pudim de Leite": [
+      10.0,
+      15
+    ],
+    "Torta de Lim\u00e3o": [
+      12.5,
+      25
+    ],
+    "Mousse de Chocolate": [
+      14.0,
+      25
+    ]
+  },
+  "bebidas": {
+    "Suco de Laranja": [
+      8.0,
+      10
+    ],
+    "Refrigerante": [
+      6.5,
+      5
+    ],
+    "Caf\u00e9 Expresso": [
+      5.0,
+      5
+    ],
+    "\u00c1gua": [
+      4.0,
+      5
+    ]
+  }
+}
