@@ -5,9 +5,9 @@ import json
 from random import randint
 
 
-CARDAPIO = "cardapio.json"
-PEDIDOS = "pedidos.json"
-AVALIACOES = "avaliacoes.json"
+CARDAPIO = "topicos_intermediarios_em_python/trabalho_final/cardapio.json"
+PEDIDOS = "topicos_intermediarios_em_python/trabalho_final/pedidos.json"
+AVALIACOES = "topicos_intermediarios_em_python/trabalho_final/avaliacoes.json"
 
 
 # Dicionário temporário para armazenar pedidos em andamento

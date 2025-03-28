@@ -8,8 +8,8 @@ import json
 console = Console()
 
 
-CARDAPIO = "cardapio.json"
-PEDIDOS = "pedidos.json"
+CARDAPIO = "topicos_intermediarios_em_python/trabalho_final/cardapio.json"
+PEDIDOS = "topicos_intermediarios_em_python/trabalho_final/pedidos.json"
 
 
 def carregar_cardapio():
