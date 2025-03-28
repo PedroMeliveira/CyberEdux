@@ -57,7 +57,7 @@ def opcao_sair():
 
 # ===========================================================================================
 
-conexao = sqlite3.connect('nocoes_de_banco_de_dados/atividade_avaliativa_21-03/dados.db')
+conexao = sqlite3.connect('nocoes_de_banco_de_dados/atividade_avaliativa_03-21/dados.db')
 cursor = conexao.cursor()
 
 def cria_tabelas_sql():
