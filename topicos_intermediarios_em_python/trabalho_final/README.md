@@ -1,1 +1,0 @@
-# Sistema-Integrado-com-Bot-no-Telegram
