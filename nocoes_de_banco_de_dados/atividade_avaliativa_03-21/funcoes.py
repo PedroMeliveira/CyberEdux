@@ -1,4 +1,5 @@
 import sqlite3
+import re
 
 def menu():
     print('========================================\n')
@@ -55,10 +56,108 @@ def try_int_positivo(msg):
 def opcao_sair():
     print(f"\nDigite 'Sair' para voltar.")
 
+def validar_senha(senha):
+    valido =  True
+    if len(senha) < 8:
+        valido = False
+        print(f'\nA senha possui menos de 8 caracteres!')
+        
+    pattern = '[\d]'
+    if not re.search(pattern, senha):  
+        valido = False
+        print(f'\nFalta um digito!')
+        
+    pattern = '[a-z]'
+    if not re.search(pattern, senha):   
+        valido = False
+        print(f'\nFalta uma letra minúscula')
+        
+    pattern = '[A-Z]'
+    if not re.search(pattern, senha):  
+        valido = False
+        print(f'\nFalta uma letra maiúscula!')
+        
+    pattern = '[\W_]'
+    if not re.search(pattern, senha):   
+        valido = False
+        print(f'\nFalta um caracter especial!')
+        
+    return valido
+
+
+
+
 # ===========================================================================================
 
 conexao = sqlite3.connect('nocoes_de_banco_de_dados/atividade_avaliativa_03-21/dados.db')
 cursor = conexao.cursor()
+
+def registrar():
+    opcao_sair()
+
+    nome_cliente = input(f'\nNome: ')
+
+    if nome_cliente.lower() != 'sair':
+
+        senha = input(f'\nDigite uma senha: ')
+            
+        while True:
+            if validar_senha(senha):
+                print(f'\nSenha válida!')
+                break
+
+            else:
+                senha = input(f'\nSenha inválida, tente novamente: ')
+                
+        email = input(f'\nEmail: ')
+        
+        endereço = input(f'\nLocal para entrega: ')
+
+        cursor.execute(f"INSERT INTO Clientes (Nome, Email, Senha, Endereço) VALUES ('{nome_cliente}', '{email}', '{senha}', '{endereço}')")
+        
+        conexao.commit()
+
+        print(f"\nConta criada com sucesso, use a opção login para entrar nela!")
+
+def login():
+    opcao_sair()
+
+    cursor.execute(f"SELECT Email, Senha FROM Clientes")
+    clientes = cursor.fetchall()
+
+    while True:
+        email = input(f'\nEmail: ')
+
+        encontrou = False
+
+        if login.lower() != 'sair':
+            for cliente in clientes:
+                if email == cliente[0]:
+                    encontrou = True
+                    senha_correta = cliente[1]
+                    break
+        
+            if encontrou:
+                break   
+
+    senha = input(f'\nSenha: ')
+
+    while senha != senha_correta:
+        print(f'\nSenha incorreta, tente novamente: ')           
+        senha = input(f'\nSenha: ')
+
+    cursor.execute(f"SELECT ID FROM Clientes WHERE Email = '{email}'")
+    id_cliente = cursor.fetchall()
+
+
+    print(f'\nLogin realizado com sucesso!')
+    
+        
+        
+
+        
+
+        
 
 def cria_tabelas_sql():
 
@@ -75,7 +174,9 @@ def cria_tabelas_sql():
         CREATE TABLE IF NOT EXISTS Clientes (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Nome TEXT NOT NULL,
-            Email TEXT NOT NULL       
+            Email TEXT NOT NULL,
+            Senha TEXT NOT NULL,
+            Endereço TEXT NOT NULL      
         )
     ''')
 
@@ -83,10 +184,7 @@ def cria_tabelas_sql():
         CREATE TABLE IF NOT EXISTS Pedidos (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Cliente_ID INTEGER,
-            Endereço TEXT NOT NULL,
-            Valor FLOAT,
             Status TEXT NOT NULL,
-            Tempo_Entrega INTEGER,
             FOREIGN KEY (Cliente_ID) REFERENCES Clientes(ID)
         )
     ''')
@@ -120,18 +218,25 @@ def cria_tabelas_sql():
 
 
 def insert_cardapio_fixo():
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Hambúrguer Artesanal', '25.90', '15')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pizza Marguerita', '39.90', '20')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Lasanha à Bolonhesa', '34.50', '25')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Frango Grelhado com Legumes', '28.00', '20')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Risoto de Cogumelos', '32.00', '30')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Refrigerante (Coca-Cola)', '6.00', '0')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Suco Natural de Laranja', '8.00', '0')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Água Mineral (500ml)', '3.50', '0')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Sorvete de Chocolate', '12.00', '5')")
-    cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pudim de Leite Condensado', '10.00', '10')")
+    
+    cursor.execute(f'SELECT * FROM Pratos')
 
-    conexao.commit()
+    pratos = cursor.fetchall()
+    
+    if len(pratos) == 0:
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Hambúrguer Artesanal', '25.90', '15')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pizza Marguerita', '39.90', '20')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Lasanha à Bolonhesa', '34.50', '25')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Frango Grelhado com Legumes', '28.00', '20')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Risoto de Cogumelos', '32.00', '30')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Refrigerante (Coca-Cola)', '6.00', '0')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Suco Natural de Laranja', '8.00', '0')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Água Mineral (500ml)', '3.50', '0')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Sorvete de Chocolate', '12.00', '5')")
+        cursor.execute(f"INSERT INTO Pratos (Nome, Valor, Tempo_Espera) VALUES ('Pudim de Leite Condensado', '10.00', '10')")
+
+        conexao.commit()
+
 
 def adicionar_prato():
     opcao_sair()
@@ -200,10 +305,13 @@ def opcao_cardapio():
 
     pratos = cursor.fetchall()
 
-    print(f'\n===========================================')
+    print(f'\n===========================================\n')
+    print(f'Cardápio\n'.center(40))
     for i, prato in enumerate(pratos):
-        print(f'({i + 1}) - {prato}')
+        print(f'({i + 1}) - {prato[1]}')
     print(f'\n===========================================')
+
+
 
 
 def fazer_pedido():
@@ -213,8 +321,12 @@ def fazer_pedido():
     
     if nome_cliente.lower() != 'sair':
         email = input(f'\nEmail: ')
-
+        
         endereço = input(f'\nLocal para entrega: ')
+
+        cursor.execute(f"INSERT INTO Clientes (Nome, Email, Endereço) VALUES ('{nome_cliente}', '{email}', {endereço})")
+        
+        conexao.commit()
 
         while True:
             opcao_cardapio()
@@ -223,4 +335,11 @@ def fazer_pedido():
 
             pratos = cursor.fetchall()
             
-            prato = escolha(1, len(pratos))
+            pedido = []
+
+            print(f'\nDigite o número do prato que deseja adicionar')
+            escolha_prato = escolha(1, len(pratos))
+
+            for i, prato in enumerate(pratos):
+                if i == escolha_prato:
+                    pedido.append(prato[0])

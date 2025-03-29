@@ -4,13 +4,15 @@ cria_tabelas_sql()
 
 insert_cardapio_fixo()
 
-while True:
-    menu()
+opcao_cardapio()
 
-    opcao = escolha(0, 5)
+# while True:
+#     menu()
 
-    if opcao == 1:
-        adicionar_prato()
+#     opcao = escolha(0, 5)
 
-    elif opcao == 2:
-        remover_prato()
+#     if opcao == 1:
+#         adicionar_prato()
+
+#     elif opcao == 2:
+#         remover_prato()
