@@ -4,7 +4,8 @@ cria_tabelas_sql()
 
 insert_cardapio_fixo()
 
-opcao_cardapio()
+id = login()
+# opcao_cardapio()
 
 # while True:
 #     menu()

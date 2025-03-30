@@ -120,6 +120,7 @@ def registrar():
         print(f"\nConta criada com sucesso, use a opção login para entrar nela!")
 
 def login():
+    id_cliente = ''
     opcao_sair()
 
     cursor.execute(f"SELECT Email, Senha FROM Clientes")
@@ -130,7 +131,7 @@ def login():
 
         encontrou = False
 
-        if login.lower() != 'sair':
+        if email.lower() != 'sair':
             for cliente in clientes:
                 if email == cliente[0]:
                     encontrou = True
@@ -148,6 +149,7 @@ def login():
 
     cursor.execute(f"SELECT ID FROM Clientes WHERE Email = '{email}'")
     id_cliente = cursor.fetchall()
+    return id_cliente
 
 
     print(f'\nLogin realizado com sucesso!')
