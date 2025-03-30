@@ -1,19 +1,42 @@
 from funcoes import *
 
 cria_tabelas_sql()
-
+insert_admin()
 insert_cardapio_fixo()
 
-id = login()
-# opcao_cardapio()
+while True:
+    menu_out()
 
-# while True:
-#     menu()
+    opcao = escolha(0, 2)
 
-#     opcao = escolha(0, 5)
+    if opcao == 1:
 
-#     if opcao == 1:
-#         adicionar_prato()
+        id_cliente = login()
 
-#     elif opcao == 2:
-#         remover_prato()
+        while True and id_cliente != '' and id_cliente != 0:
+            menu_cliente()
+
+            opcao = escolha(0, 2)
+
+            if opcao == 1:
+                opcao_cardapio()
+
+            elif opcao == 2:
+                fazer_pedido(id_cliente)
+            else:
+                break
+        
+        if id_cliente == '0':
+            menu_admin()
+
+            opcao = escolha(0, 3)
+
+            if opcao == 1:
+                adicionar_prato()
+            
+            elif opcao == 2:
+                remover_prato()
+            
+            elif opcao == 3:
+                
+

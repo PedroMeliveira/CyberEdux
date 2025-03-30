@@ -1,15 +1,28 @@
 import sqlite3
 import re
 
-def menu():
+def menu_out():
+    print('========================================\n')
+    print("Bem vindo ao seu Restaurante Favorito")
+    print("(1) - Login")
+    print("(2) - Registrar")
+    print("(0) - Sair\n")
+    print('========================================\n')
+
+def menu_cliente():
     print('========================================\n')
     print('Bem vindo ao seu Restaurante Favorito')
+    print('1 - Cardápio')
+    print('2 - Fazer Pedido')
+    print('0 - Sair\n')
+    print('========================================\n')
+
+def menu_admin():
+    print('========================================\n')
     print('1 - Adicionar Prato')
     print('2 - Remover Prato')
     print('3 - Gerenciar Pedidos')
-    print('4 - Cardápio')
-    print('5 - Fazer Pedido')
-    print('0 - Sair/Gerar Relatório Diário\n')
+    print('0 - Sair/Gerar Relatório Diário')
     print('========================================\n')
 
 def escolha(min, max):
@@ -92,12 +105,33 @@ def validar_senha(senha):
 conexao = sqlite3.connect('nocoes_de_banco_de_dados/atividade_avaliativa_03-21/dados.db')
 cursor = conexao.cursor()
 
+
 def registrar():
     opcao_sair()
 
     nome_cliente = input(f'\nNome: ')
 
     if nome_cliente.lower() != 'sair':
+        print("\nNome adicionado com sucesso!")
+
+        while True:
+            login_cliente = input(f'\nLogin: ')
+
+            cursor.execute("SELECT Login FROM Clientes")
+            
+            logins = cursor.fetchall()
+
+            if len(logins) > 0:
+                tem_igual = False
+                for login in logins:
+                    if login == login_cliente:
+                        print("\nLogin já está em uso, tente outro!")
+                        tem_igual = True
+                        break
+                if not tem_igual:
+                    break
+        
+        print("\nLogin adicionado com sucesso!")            
 
         senha = input(f'\nDigite uma senha: ')
             
@@ -108,59 +142,58 @@ def registrar():
 
             else:
                 senha = input(f'\nSenha inválida, tente novamente: ')
-                
-        email = input(f'\nEmail: ')
-        
-        endereço = input(f'\nLocal para entrega: ')
 
-        cursor.execute(f"INSERT INTO Clientes (Nome, Email, Senha, Endereço) VALUES ('{nome_cliente}', '{email}', '{senha}', '{endereço}')")
-        
+        cursor.execute(f"INSERT INTO Clientes (Nome, Login, Senha) VALUES ('{nome_cliente}', '{login}', '{senha}')")
+
         conexao.commit()
 
         print(f"\nConta criada com sucesso, use a opção login para entrar nela!")
+
+    else:
+        print("\nSaindo...")
 
 def login():
     id_cliente = ''
     opcao_sair()
 
-    cursor.execute(f"SELECT Email, Senha FROM Clientes")
+    cursor.execute(f"SELECT Login, Senha FROM Clientes")
     clientes = cursor.fetchall()
 
-    while True:
-        email = input(f'\nEmail: ')
+    login = input(f'\nLogin: ')
 
-        encontrou = False
+    encontrou = False
 
-        if email.lower() != 'sair':
+    if login.lower() != 'sair':
+        while True and login.lower() != 'sair':
             for cliente in clientes:
-                if email == cliente[0]:
+                if login == cliente[0]:
                     encontrou = True
                     senha_correta = cliente[1]
-                    break
-        
+                    break 
             if encontrou:
-                break   
-
-    senha = input(f'\nSenha: ')
-
-    while senha != senha_correta:
-        print(f'\nSenha incorreta, tente novamente: ')           
-        senha = input(f'\nSenha: ')
-
-    cursor.execute(f"SELECT ID FROM Clientes WHERE Email = '{email}'")
-    id_cliente = cursor.fetchall()
-    return id_cliente
-
-
-    print(f'\nLogin realizado com sucesso!')
-    
+                break
+            else:
+                login = input("\nLogin não encontrado, tente novamente: ")
         
-        
+        if login.lower() != 'sair':
+            senha = input(f'\nSenha: ')
 
-        
+            while senha != senha_correta:
+                print(f'\nSenha incorreta, tente novamente: ')           
+                senha = input(f'\nSenha: ')
 
-        
+            cursor.execute(f"SELECT ID FROM Clientes WHERE Email = '{email}'")
+            id_cliente = cursor.fetchall()
 
+            print(f'\nLogin realizado com sucesso!')
+
+            return id_cliente
+
+        else:
+            print("\nSaindo...")
+    else:
+        print("\nSaindo...")
+        
 def cria_tabelas_sql():
 
     cursor.execute('''
@@ -176,9 +209,8 @@ def cria_tabelas_sql():
         CREATE TABLE IF NOT EXISTS Clientes (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Nome TEXT NOT NULL,
-            Email TEXT NOT NULL,
-            Senha TEXT NOT NULL,
-            Endereço TEXT NOT NULL      
+            Login TEXT NOT NULL,
+            Senha TEXT NOT NULL,     
         )
     ''')
 
@@ -187,6 +219,7 @@ def cria_tabelas_sql():
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Cliente_ID INTEGER,
             Status TEXT NOT NULL,
+            Endereço TEXT NOT NULL 
             FOREIGN KEY (Cliente_ID) REFERENCES Clientes(ID)
         )
     ''')
@@ -218,6 +251,14 @@ def cria_tabelas_sql():
 
     conexao.commit()
 
+def insert_admin():
+    cursor.execute(f'SELECT * FROM Clientes')
+
+    clientes = cursor.fetchall()
+
+    if len(clientes) == 0: 
+        cursor.execute(f"INSERT INTO Clientes (ID, Nome, Login, senha) VALUES ('0','admin', 'admin', '123123')")
+        conexao.commit()
 
 def insert_cardapio_fixo():
     
@@ -316,32 +357,47 @@ def opcao_cardapio():
 
 
 
-def fazer_pedido():
+def fazer_pedido(id_cliente):
     opcao_sair()
 
-    nome_cliente = input(f'\nNome: ')
-    
-    if nome_cliente.lower() != 'sair':
-        email = input(f'\nEmail: ')
-        
-        endereço = input(f'\nLocal para entrega: ')
+    endereço = input(f'\nLocal para entrega: ')
 
-        cursor.execute(f"INSERT INTO Clientes (Nome, Email, Endereço) VALUES ('{nome_cliente}', '{email}', {endereço})")
-        
+    if endereço.lower() != 'sair':
+        cursor.execute(f"INSERT INTO Pedidos (Cliente_ID, Status, Endereço) VALUES ('{id_cliente}', 'Realizado'. '{endereço}')")
         conexao.commit()
 
+        cursor.execute("SELECT LAST_INSERT_ID()")
+        id_pedido = cursor.fetchall()
+
+        cursor.execute(f'SELECT ID, Nome FROM Pratos')
+
+        pratos = cursor.fetchall()
+
+        pedido = []
+
+        opcao_cardapio()
+
         while True:
-            opcao_cardapio()
-
-            cursor.execute(f'SELECT ID, Nome FROM Pratos')
-
-            pratos = cursor.fetchall()
-            
-            pedido = []
-
             print(f'\nDigite o número do prato que deseja adicionar')
             escolha_prato = escolha(1, len(pratos))
 
             for i, prato in enumerate(pratos):
                 if i == escolha_prato:
                     pedido.append(prato[0])
+            
+            while True:
+                continua = input(f"\nDeseja adicionar mais pratos ao pedido? (S/N)").lower()[0]
+                adicionou = False
+                if continua == 'n':
+                    for id_prato in pedido:
+                        cursor.execute(f"INSERT INTO Prato_Pedido (Prato_ID, Pedido_ID) VALUES ('{id_prato}', '{id_pedido}')")
+                    conexao.commit()
+                    adicionou = True
+                    break
+                elif continua != 's':
+                    print(f"\nEntrada inválida! ")
+            if adicionou:
+                break
+
+def gerenciar_pedidos():
+    cursor.execute(f"SELECT * FROM Prato_Pedido")
