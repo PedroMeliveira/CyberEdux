@@ -183,11 +183,11 @@ def login():
                 senha = input(f'\nSenha: ')
 
             cursor.execute(f"SELECT ID FROM Clientes WHERE Login = '{login}'")
-            id_cliente = cursor.fetchall()
+            id_cliente = cursor.fetchone()
 
             print(f'\nLogin realizado com sucesso!')
 
-            return id_cliente[0][0]
+            return id_cliente[0]
 
         else:
             print("\nSaindo...")
@@ -246,7 +246,9 @@ def cria_tabelas_sql():
         CREATE TABLE IF NOT EXISTS Prato_Pedido (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Prato_ID INTEGER,
-            Pedido_ID INTEGER
+            Pedido_ID INTEGER,
+            FOREIGN KEY (Prato_ID) REFERENCES Pratos(ID),
+            FOREIGN KEY (Pedido_ID) REFERENCES Pedidos(ID)
         )
     ''')
 
@@ -430,6 +432,7 @@ def gerar_relatorio():
     print(f"\nRelatório do dia :")
     cursor.execute(f"SELECT Vendas FROM Relatorios")
     vendas = cursor.fetchall()
+    print(vendas)
     print(f"Lucro: {sum(vendas)}")
     print(f"\nSaindo...")
 
