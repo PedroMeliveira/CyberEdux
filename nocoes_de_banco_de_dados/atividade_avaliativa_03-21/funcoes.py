@@ -14,6 +14,7 @@ def menu_cliente():
     print('Bem vindo ao seu Restaurante Favorito')
     print('1 - Cardápio')
     print('2 - Fazer Pedido')
+    print('3 - Status do Pedido')
     print('0 - Sair\n')
     print('========================================\n')
 
@@ -143,7 +144,7 @@ def registrar():
             else:
                 senha = input(f'\nSenha inválida, tente novamente: ')
 
-        cursor.execute(f"INSERT INTO Clientes (Nome, Login, Senha) VALUES ('{nome_cliente}', '{login}', '{senha}')")
+        cursor.execute(f"INSERT INTO Clientes (Nome, Login, Senha) VALUES ('{nome_cliente}', '{login_cliente}', '{senha}')")
 
         conexao.commit()
 
@@ -153,7 +154,6 @@ def registrar():
         print("\nSaindo...")
 
 def login():
-    id_cliente = ''
     opcao_sair()
 
     cursor.execute(f"SELECT Login, Senha FROM Clientes")
@@ -182,17 +182,19 @@ def login():
                 print(f'\nSenha incorreta, tente novamente: ')           
                 senha = input(f'\nSenha: ')
 
-            cursor.execute(f"SELECT ID FROM Clientes WHERE Email = '{email}'")
+            cursor.execute(f"SELECT ID FROM Clientes WHERE Login = '{login}'")
             id_cliente = cursor.fetchall()
 
             print(f'\nLogin realizado com sucesso!')
 
-            return id_cliente
+            return id_cliente[0][0]
 
         else:
             print("\nSaindo...")
     else:
+        id_cliente = 'sair'
         print("\nSaindo...")
+        return id_cliente
         
 def cria_tabelas_sql():
 
@@ -210,7 +212,7 @@ def cria_tabelas_sql():
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Nome TEXT NOT NULL,
             Login TEXT NOT NULL,
-            Senha TEXT NOT NULL,     
+            Senha TEXT NOT NULL   
         )
     ''')
 
@@ -219,7 +221,7 @@ def cria_tabelas_sql():
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Cliente_ID INTEGER,
             Status TEXT NOT NULL,
-            Endereço TEXT NOT NULL 
+            Endereço TEXT NOT NULL, 
             FOREIGN KEY (Cliente_ID) REFERENCES Clientes(ID)
         )
     ''')
@@ -236,8 +238,7 @@ def cria_tabelas_sql():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Relatorios (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            Vendas FLOAT,
-            Data TEXT NOT NULL              
+            Vendas FLOAT              
         )
     ''')
 
@@ -363,13 +364,13 @@ def fazer_pedido(id_cliente):
     endereço = input(f'\nLocal para entrega: ')
 
     if endereço.lower() != 'sair':
-        cursor.execute(f"INSERT INTO Pedidos (Cliente_ID, Status, Endereço) VALUES ('{id_cliente}', 'Realizado'. '{endereço}')")
+        cursor.execute(f"INSERT INTO Pedidos (Cliente_ID, Status, Endereço) VALUES ('{id_cliente}', 'Realizado', '{endereço}')")
         conexao.commit()
 
-        cursor.execute("SELECT LAST_INSERT_ID()")
+        cursor.execute("SELECT last_insert_rowid()")
         id_pedido = cursor.fetchall()
 
-        cursor.execute(f'SELECT ID, Nome FROM Pratos')
+        cursor.execute(f'SELECT ID, Nome, Valor FROM Pratos')
 
         pratos = cursor.fetchall()
 
@@ -384,20 +385,56 @@ def fazer_pedido(id_cliente):
             for i, prato in enumerate(pratos):
                 if i == escolha_prato:
                     pedido.append(prato[0])
-            
-            while True:
-                continua = input(f"\nDeseja adicionar mais pratos ao pedido? (S/N)").lower()[0]
-                adicionou = False
-                if continua == 'n':
-                    for id_prato in pedido:
-                        cursor.execute(f"INSERT INTO Prato_Pedido (Prato_ID, Pedido_ID) VALUES ('{id_prato}', '{id_pedido}')")
+                    cursor.execute(f"INSERT INTO Relatorios (Vendas) VALUES ('{prato[2]}')")
                     conexao.commit()
-                    adicionou = True
-                    break
-                elif continua != 's':
-                    print(f"\nEntrada inválida! ")
-            if adicionou:
-                break
 
+            continua = input(f"\nDeseja adicionar mais pratos ao pedido? (S/N)").lower()[0]
+            while continua != 'n' and continua != 's':
+                continua = input(f"\nEntrada inválida! Tente novamente, (S/N): ")
+            if continua == 'n':
+                for id_prato in pedido:
+                    cursor.execute(f"INSERT INTO Prato_Pedido (Prato_ID, Pedido_ID) VALUES ('{id_prato}', '{id_pedido}')")
+                conexao.commit()
+                print(f"\nPedido feito com sucesso! Em breve, ele chegará! ")
+                break
+                
+                
+        
 def gerenciar_pedidos():
-    cursor.execute(f"SELECT * FROM Prato_Pedido")
+    cursor.execute(f"SELECT * FROM Pedidos")
+    pedidos = cursor.fetchall()
+    print("\n====ID/Cliente_ID/Status/Endereço=====\n")
+    for pedido in pedidos:
+        print(f"{pedido[0]} / {pedido[1]} / {pedido[2]} / {pedido[3]}")
+    print("\n======================================\n")
+    opcao = input("Deseja fazer alguma alteração nos pedidos? (S/N)").lower()[0]
+    if opcao == 's':
+        while True:
+            id_pedido = input("\nDigite o ID do pedido que deseja alterar: ")
+            achou = False
+            cursor.execute(f"SELECT * FROM Pedidos")
+            pedidos = cursor.fetchall()
+            for pedido in pedidos:
+                if str(id_pedido) == str(pedido[0]):
+                    achou = True
+            if achou:
+                break
+            print("\nID não econtrado!")
+
+        novo_status = input("Qual o novo status do pedido? ")
+
+        cursor.execute(f"UPDATE Pedidos SET Status = '{novo_status}' WHERE ID = '{id_pedido}'")
+        conexao.commit()
+
+def gerar_relatorio():
+    print(f"\nRelatório do dia :")
+    cursor.execute(f"SELECT Vendas FROM Relatorios")
+    vendas = cursor.fetchall()
+    print(f"Lucro: {sum(vendas)}")
+    print(f"\nSaindo...")
+
+def verificar_status(id_cliente):
+    cursor.execute(f"SELECT ID, Status FROM Pedidos WHERE Cliente_ID = '{id_cliente}'")
+    status = list(cursor.fetchall())
+    for statu in status:
+        print(f"\nStatus do Pedido {statu[0]} : {statu[1]}")
