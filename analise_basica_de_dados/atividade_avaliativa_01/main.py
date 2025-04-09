@@ -112,11 +112,16 @@ df = pd.read_csv('analise_basica_de_dados/atividade_avaliativa_01/vgsales.csv')
 
 # 23. Qual jogo tem a maior porcentagem de vendas no Japão (JP_Sales) em relação às vendas globais (Global_Sales)?
 
-df_valid = df[df["Global_Sales"] > 0]
+# df['Diff_JP_Sales_Global_Sales'] = (df['JP_Sales']/df["Global_Sales"]) * 100
 
-df['Diff_JP_Sales_Global_Sales'] = (df['JP_Sales']/df_valid) * 100
+# print(df.loc[df['Diff_JP_Sales_Global_Sales'].idxmax()]['Name'])
 
-print(df.loc[df['Diff_JP_Sales_Global_Sales'].idxmax()])
 # 24. Quantos jogos foram lançados pela mesma Publisher em pelo menos 3 plataformas (Platform) diferentes?
 
+
+
 # 25. Qual é o jogo mais antigo (Year) no dataset que ainda possui vendas globais (Global_Sales) acima de 20 milhões?
+
+# jogo_vendas_maior_20 = df[df['Global_Sales'] > 20]
+
+# print(jogo_vendas_maior_20.loc[jogo_vendas_maior_20['Year'].idxmin()]['Name']) 
