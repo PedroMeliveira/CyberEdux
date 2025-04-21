@@ -40,5 +40,5 @@ def criar_tabelas_sql():
     conexao.commit()
 
 def insere_perfil():
-    cursor.execute(f"INSERT INTO Clientes (ID, Nome, Email, Senha) VALUES ('1', 'Pedro', 'pedro.melchiordeoliveira@gmail.com', '123123')")
+    cursor.execute(f"INSERT INTO Clientes (ID, Nome, Email, Senha) VALUES ('1', 'Teste', 'teste@gmail.com', '123123')")
     conexao.commit()
