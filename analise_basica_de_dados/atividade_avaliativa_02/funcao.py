@@ -1,6 +1,8 @@
 import sqlite3
 
-conexao = sqlite3.connect('analise_basica_de_dados/atividade_avaliativa_02/dados.db')
+DADOS = 'dados.db'
+
+conexao = sqlite3.connect(DADOS, check_same_thread=False)
 cursor = conexao.cursor()
 
 def criar_tabelas_sql():
