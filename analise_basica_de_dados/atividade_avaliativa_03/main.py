@@ -21,6 +21,8 @@ with st.sidebar:
 
 col1, col2, col3 = st.columns(3)
 
+st.subheader('Métricas Gerais')
+
 col1.metric('Total Jogos', str(df['Name'].nunique()))
 
 with col2:
