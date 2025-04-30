@@ -10,7 +10,7 @@ with st.sidebar:
     ano_max = int(df['Year'].max())
     fil_ano = st.slider('Ano', ano_min, ano_max, (ano_min, ano_max))
 
-    regioes = ['Global_Sales', 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']
+    regioes = ['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']
     fil_regioes = st.multiselect("Regiões", regioes, placeholder='Escolha as opções')
 
     df_plataformas = df['Platform'].unique()
@@ -63,4 +63,36 @@ with tab1:
     st.plotly_chart(fig)
 
 with tab2:
-    fig = px.pie(df_filtrado, values='', names='country', title='Population of European continent')
+    regioes = ['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']
+    percentual = {}
+    for regiao in regioes:
+        if len(fil_regioes) > 0:
+            if regiao in fil_regioes:
+                percentual[regiao] = df_filtrado[regiao].sum()
+        else: 
+            percentual[regiao] = df_filtrado[regiao].sum()
+    fig = px.pie(values=percentual.values(), names=percentual.keys(), title='Percentual de vendas por região')
+    st.plotly_chart(fig)
+
+with tab3:
+    if len(fil_regioes) > 0:
+        df_genero = df_filtrado.groupby('Genre')[fil_regioes].sum().reset_index()
+        fig = px.bar(df_genero, x='Genre',y=fil_regioes,barmode='stack')
+    else:
+        df_genero = df_filtrado.groupby('Genre')[regioes].sum().reset_index()
+        fig = px.bar(df_genero, x='Genre',y=regioes,title='Popularidade por Gênero',labels={'value': 'Vendas em milhoes', 'variable': 'Região'},barmode='stack')
+    st.plotly_chart(fig)
+
+with tab4:
+    df_vendas_ano = df_filtrado.groupby('Year')['Soma_Vendas'].sum().reset_index()
+    fig = px.line(df_vendas_ano, x='Year', y='Soma_Vendas', title='Vendas Global por Ano')
+    st.plotly_chart(fig)
+
+with tab5:
+    nome_jogo = st.text_input('Digite o nome do Jogo',placeholder='Jogo')
+    if nome_jogo:
+        df_resultado_jogo = df_filtrado[df_filtrado['Name'].str.contains(nome_jogo, case=False, na=False)]
+        if not df_resultado_jogo.empty:
+            st.write(df_resultado_jogo)
+        else:
+            st.write('Nenhum jogo encontrado.')
