@@ -22,18 +22,16 @@ with tab1:
         st.plotly_chart(fig)
 
     with tab1_3:
-        col1_3_1, col1_3_2 = st.columns(2)
+        st.metric('Idade média', value=int(df["Age"].mean()))
+        col1_3_1, col1_3_2, col1_3_3 = st.columns(3)
         with col1_3_1:
-            st.metric('Idade média', value=int(df["Age"].mean()))
-            col1_3_1_1, col1_3_1_2 = st.columns(2)
-            with col1_3_1_1:
-                fig = px.bar(df.groupby('Income_Level')['Age'].mean().reset_index(), x='Income_Level', y='Age', title='Idade média por nivel de renda')
-                st.plotly_chart(fig)
-            with col1_3_1_2:
-                fig = px.bar(df.groupby('Gender')['Age'].mean().reset_index(), x='Gender', y='Age', title='Percentual de idade por gênero')
-                st.plotly_chart(fig)
-
+            col1_3_1_1, col1_3_1_2, col1_3_1_3 = st.columns(3)
+            fig = px.bar(df.groupby('Income_Level')['Age'].mean().reset_index(), x='Income_Level', y='Age', title='Idade média por nivel de renda')
+            st.plotly_chart(fig)
         with col1_3_2:
+            fig = px.bar(df.groupby('Gender')['Age'].mean().reset_index(), x='Gender', y='Age', title='Percentual de idade por gênero')
+            st.plotly_chart(fig)
+        with col1_3_3:
             fig = px.bar(df['Age'].value_counts().reset_index(), x='Age', y='count', title='Percentual Idade')
             st.plotly_chart(fig)
 # print(f'Idade média dos clientes: {df["Age"].mean()}')
