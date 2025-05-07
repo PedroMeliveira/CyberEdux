@@ -9,6 +9,7 @@ class Pessoa:
         return f"Olá me chamo {self.nome}, e eu tenho {self.idade} anos"
 
 from math import pi    
+from math import sqrt    
 class Circulo:
     def __init__(self, raio):
         self.raio = float(raio)
@@ -83,21 +84,62 @@ class Biblioteca:
     def listar(self):
         for livro in self.estoque:
             print(livro.autor)
-
-# canids = Biblioteca([])
-# livro1 = Livro('Harry Potter', 'Jake Role')
-# livro2 = Livro('Percy Jackson', 'Rick Riordao')
-# canids.adicionar(livro1)
-# canids.adicionar(livro2)
-# canids.listar()
-# canids.remover(livro1)
-# canids.listar()
         
 class Ponto:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+    def distancia(self, x2, y2):
+        return sqrt((x2 - self.x)**2 + (y2 - self.y)** 2)
+
+class Carro:
+    def __init__(self, nome, velocidade, aceleração):
+        self.nome = nome
+        self.velocidade = float(velocidade)
+        self.aceleração = float(aceleração)
+        self.poder = self.velocidade * (1 + (self.aceleração/100))
     
+    def aumentar_velocidade(self, valor):
+        if valor > 0:
+            self.velocidade += valor
+    
+    def aumentar_aceleração(self, valor):
+        if valor > 0:
+            self.aceleração += valor
+            
+class Pista:
+    def __init__(self, carros_possiveis, distancia, carros_na_pista):
+        self.carros_possiveis = int(carros_possiveis)
+        self.distancia = float(distancia)
+        self.carros_na_pista = carros_na_pista
+        
+    def verifica_disponibilidade(self):
+        return len(self.carros_na_pista) < self.carros_possiveis
+    
+    def adicionar_carro(self, Carro):
+        if self.verifica_disponibilidade():
+            self.carros_na_pista.append(Carro)
+           
+class Corrida:
+    def __init__(self, local, Pista, premio):
+        self.local = local
+        self.pista = Pista
+        self.premio = float(premio)
+ 
+    def rodar_corrida(self):
+        maior_poder = 0
+        for carro in self.pista.carros_na_pista:
+            if carro.poder > maior_poder:
+                maior_poder = carro.poder
+                carro_ganhando = carro
+        return carro_ganhando
+            
+        
+            
+    
+            
         
         
+        
+ 
