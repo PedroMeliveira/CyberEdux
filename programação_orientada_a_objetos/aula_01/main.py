@@ -120,7 +120,7 @@ class Pista:
     def adicionar_carro(self, Carro):
         if self.verifica_disponibilidade():
             self.carros_na_pista.append(Carro)
-           
+             
 class Corrida:
     def __init__(self, local, Pista, premio):
         self.local = local
