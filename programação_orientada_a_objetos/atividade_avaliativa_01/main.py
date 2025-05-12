@@ -1,5 +1,6 @@
 import random
-import csv   
+import sqlite3
+
 class Livro:
     def __init__(self, titulo, autor, ano, categoria):
         self.titulo = titulo
@@ -48,13 +49,16 @@ class Usuario:
     def get_livros_emprestados(self):
         return self.__livros_emprestados
     
+    def get_limite(self):
+        return self.__limite
+    
     def pegar_emprestado(self, livro, biblioteca):
         if livro in biblioteca.get_livros():
             if livro.get_disponibilidade() and self.__limite < 3:
                 self.__livros_emprestados.append(livro)
                 self.__limite += 1
                 livro.set_disponibilidade(False)
-                biblioteca.set_historico(livro)
+                biblioteca.set_historico([livro, self])
                 print("Livro emprestado com sucesso!\n")
                 
             elif not livro.get_disponibilidade():
@@ -87,10 +91,8 @@ class Biblioteca:
     def get_livros(self):
         return self.__livros
     
-    
     def get_usuarios(self):
         return self.__usuarios
-    
     
     def get_historico(self):
         return self.__historico
@@ -122,13 +124,65 @@ class Biblioteca:
             print("Usuario registrado com sucesso!\n")
         else:
             print("Esse usuário já está registrado!\n")    
+    
+        
+    def criar_dados(self):
+        conexao = sqlite3.connect('programação_orientada_a_objetos/atividade_avaliativa_01/dados.db')
+        cursor = conexao.cursor()
 
-             
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Usuarios (
+                ID INTEGER,
+                Nome TEXT NOT NULL,
+                Limite INTEGER
+                )
+        ''')
+        conexao.commit()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Livros (
+                ISBN INTEGER,
+                Titulo TEXT NOT NULL,
+                Autor TEXT NOT NULL,
+                Ano INTEGER,
+                Categoria TEXT NOT NULL,
+                Disponibilidade INTEGER
+                )
+            ''')
+        conexao.commit()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Historico (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Livro_ISBN INTEGER,
+                Usuario_ID INTEGER,
+                FOREIGN KEY (Usuario_ID) REFERENCES Usuarios(ID),
+                FOREIGN KEY (Livro_ISBN) REFERENCES Livros(ISBN)
+                )
+            ''')
+
+        conexao.commit()
+    
     def salvar_dados(self):
-        with open('programação_orientada_a_objetos/atividade_avaliativa_01/biblioteca_dados.csv', 'w') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(self.__historico)
-            
+        conexao = sqlite3.connect('programação_orientada_a_objetos/atividade_avaliativa_01/dados.db')
+        cursor = conexao.cursor()
+        
+        for item in self.get_historico():
+            cursor.execute(f'INSERT INTO Historico (Livro_ISBN, Usuario_ID) VALUES ({item[0].get_isbn()}, {item[1].id})')
+        
+        for livro in self.get_livros():
+            if livro.get_disponibilidade():
+                cursor.execute('INSERT INTO Livros (ISBN, Titulo, Autor, Ano, Categoria, Disponibilidade) VALUES (?, ?, ?, ?, ?, 1)', (livro.get_isbn(), livro.titulo, livro.autor, livro.ano, livro.categoria))
+            else:
+                cursor.execute('INSERT INTO Livros (ISBN, Titulo, Autor, Ano, Categoria, Disponibilidade) VALUES (?, ?, ?, ?, ?, 0)', (livro.get_isbn(), livro.titulo, livro.autor, livro.ano, livro.categoria))
+
+        for usuario in self.get_usuarios():
+            cursor.execute("INSERT INTO Usuarios (ID, Nome, Limite) VALUES (?, ?, ?)", (usuario.id, usuario.nome, usuario.get_limite()))
+        
+        conexao.commit()
+        
+    def carregar_dados(self):
+        
+        
 bib_01 = Biblioteca('Cyber Edux')
 
 usuario_01 = Usuario('Pedro')         
@@ -145,10 +199,12 @@ bib_01.adicionar_livro(livro_03)
 bib_01.adicionar_livro(livro_04)
 
 bib_01.registrar_usuario(usuario_01)
+bib_01.registrar_usuario(usuario_02)
 
 usuario_01.pegar_emprestado(livro_01, bib_01)
 usuario_01.pegar_emprestado(livro_02, bib_01)
 usuario_01.pegar_emprestado(livro_03, bib_01)
 usuario_02.pegar_emprestado(livro_04, bib_01)
 
+bib_01.criar_dados()
 bib_01.salvar_dados()
