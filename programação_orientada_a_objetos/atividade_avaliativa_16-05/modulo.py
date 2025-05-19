@@ -17,7 +17,7 @@ def cria_pagamento():
     
     return Pagamento(metodo, valor, data)
 
-class Credito(Pagamento):
+class Credito():
     def __init__(self, numero, nome, validade, cvv):
         self.numero = numero
         self.nome = nome
@@ -33,10 +33,10 @@ def cria_credito():
     
     cvv = input("Qual o CVV? \n")
     
-    return Credito(valor, data, numero, nome, validade, cvv)
+    return Credito(numero, nome, validade, cvv)
     
 
-class Paypal(Pagamento):
+class Paypal():
     def __init__(self, email, senha):
         self.email = email
         self.__senha = senha
@@ -52,7 +52,7 @@ def cria_paypal():
     return Paypal(email, senha)
     
     
-class Bancaria(Pagamento):
+class Bancaria():
     def __init__(self, codigo, origem, destino):
         self.codigo = codigo
         self.origem = origem
