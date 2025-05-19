@@ -180,7 +180,7 @@ class Biblioteca:
         
         conexao.commit()
         
-    def carregar_dados(self):
+    # def carregar_dados(self):
         
         
 bib_01 = Biblioteca('Cyber Edux')
