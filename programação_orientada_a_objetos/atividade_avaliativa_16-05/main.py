@@ -3,29 +3,31 @@ from modulo import *
 menu()
 cria_tabela()
 
-clicou = False
 trans = cria_trans()
-pag_id = insert_pagamento_retorna_id(trans)
-
-
 
 if trans.metodo == 'Crédito':
-    pagamento = cria_credito()
+    pagamento, validado = cria_credito()
     st.markdown('---')
-    if st.button("Confirmar pagamento"):
-        insert_credito(pagamento, pag_id)
-        st.write("✅ Pagamento Confirmado e Salvo!")
+    if validado:
+        if st.button("Confirmar pagamento"):
+            pag_id = insert_pagamento_retorna_id(trans)
+            insert_credito(pagamento, pag_id)
+            st.write("✅ Pagamento Confirmado e Salvo!")
     
 elif trans.metodo == 'Paypal':
-    pagamento = cria_paypal()
+    pagamento, validado = cria_paypal()
     st.markdown('---')
-    if st.button("Confirmar pagamento"):
-        insert_paypal(pagamento, pag_id)
-        st.write("✅ Pagamento Confirmado e Salvo!")
+    if validado:
+        if st.button("Confirmar pagamento"):
+            pag_id = insert_pagamento_retorna_id(trans)
+            insert_paypal(pagamento, pag_id)
+            st.write("✅ Pagamento Confirmado e Salvo!")
     
 elif trans.metodo == 'Transferência Bancária':
-    pagamento = cria_bancaria()
+    pagamento, validado = cria_bancaria()
     st.markdown('---')
-    if st.button("Confirmar pagamento"):
-        insert_trans_bancaria(pagamento, pag_id)
-        st.write("✅ Pagamento Confirmado e Salvo!")
+    if validado:
+        if st.button("Confirmar pagamento"):
+            pag_id = insert_pagamento_retorna_id(trans)
+            insert_trans_bancaria(pagamento, pag_id)
+            st.write("✅ Pagamento Confirmado e Salvo!")

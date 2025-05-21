@@ -50,8 +50,8 @@ def cria_credito():
         else:
             st.error("❌ CVV inválido. Deve conter 3 ou 4 dígitos numéricos.")
     
-    if validar_cartao(numero) and validar_cvv(cvv):
-        return Credito(numero, nome, validade, cvv)
+
+    return Credito(numero, nome, validade, cvv), validar_cartao(numero) and validar_cvv(cvv)
     
 
 class Paypal():
@@ -93,8 +93,8 @@ def cria_paypal():
         else:
             st.error("❌ A senha deve ter:\n- Mínimo 8 caracteres\n- Letra maiúscula e minúscula\n- Número\n- Caractere especial")
     
-    if validar_email(email) and validar_senha(senha):
-        return Paypal(email, senha)
+
+    return Paypal(email, senha), validar_email(email) and validar_senha(senha)
     
     
 class Bancaria():
@@ -136,8 +136,8 @@ def cria_bancaria():
         else:
             st.error("❌ Conta inválida. Deve ter de 4 a 12 dígitos, com DV opcional (ex: 123456-7).")
     
-    if validar_codigo_banco(codigo) and validar_conta(origem) and validar_conta(destino):
-        return Credito(codigo, origem, destino)
+    
+    return Credito(codigo, origem, destino), validar_codigo_banco(codigo) and validar_conta(origem) and validar_conta(destino)
 
     
 def menu():
