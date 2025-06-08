@@ -176,20 +176,20 @@ from PyQt6.QtCore import *
         
 # DESAFIO
 
-class Janela(QWidget):
-    def __init__(self):
-        super().__init__()
-        global votos_A, votos_B
-        self.votos_A = self.votos_B = 0
+# class Janela(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         global votos_A, votos_B
+#         self.votos_A = self.votos_B = 0
         
         
-        self.setWindowTitle("Do the éli!")
-        self.setGeometry(500, 300, 400, 400)
-        self.
+#         self.setWindowTitle("Do the éli!")
+#         self.setGeometry(500, 300, 400, 400)
+#         self.
         
     
-if __name__ == "__main__":
-    app = QApplication([])
-    janela = Janela()
-    janela.show()
-    app.exec()
+# if __name__ == "__main__":
+#     app = QApplication([])
+#     janela = Janela()
+#     janela.show()
+#     app.exec()
