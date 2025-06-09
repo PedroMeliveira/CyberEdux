@@ -21,6 +21,7 @@ class Gerenciador_Contatos(QWidget):
 
         self.lbl_filtro = QLabel("Filtro:", self)
         self.input_filtro = QComboBox()
+
         self.input_filtro.addItems(["Família", "Trabalho", "Amigos"])
 
         self.layout_filtro = QHBoxLayout()
@@ -44,10 +45,10 @@ class Gerenciador_Contatos(QWidget):
 
         self.setLayout(self.layout_principal)
         
-        self.botao_novo_contato.clicked.connect(self.abrir_janela_contato())
-        self.botao_editar_contato.clicked.connect(self.abrir_janela_contato())
+        self.botao_novo_contato.clicked.connect(self.abrir_janela_contato)
+        self.botao_editar_contato.clicked.connect(self.abrir_janela_contato)
 
-    def abrir_janela_contato(contato=None):
+    def abrir_janela_contato(self, contato=None):
         dialogo_contato = QDialog()
         dialogo_contato.setWindowTitle("Editar Contato" if contato else "Adicionar Contato")
 
