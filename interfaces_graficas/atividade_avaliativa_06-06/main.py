@@ -103,9 +103,11 @@ class Gerenciador_Contatos(QWidget):
     def adicionar(self):
         contato_novo = self.abrir_janela_contato()
 
-        if contato_novo:
+        # if contato_novo:
             #
 
+    def editar(self):
+        contato = self.table.currentRow()
 class Contatos():
     def __init__(self, nome, telefone, email, tipo):
         self.nome = nome
