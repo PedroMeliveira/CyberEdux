@@ -1,10 +1,42 @@
 from PyQt6.QtWidgets import (QApplication, QTableWidget, QWidget, QGridLayout, QLabel, 
-                            QLineEdit, QMessageBox, QFormLayout, QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QDateEdit)
+                            QLineEdit, QTableWidgetItem, QMessageBox, QFormLayout, QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QDateEdit)
 from PyQt6.QtCore import Qt
+import json
+
+def carregar_contatos():
+    try:
+        with open("interfaces_graficas/atividade_avaliativa_06-06/contatos.json", "r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+            return [Contatos(**contato) for contato in dados]
+        
+    except FileNotFoundError:
+        with open("interfaces_graficas/atividade_avaliativa_06-06/contatos.json", "w", encoding="utf-8") as arquivo:
+            json.dump([], arquivo)
+        return []
+    
+
+def salvar_contatos(contatos):
+    contatos_como_dict = [
+        {
+            "nome": c.nome,
+            "telefone": c.telefone,
+            "email": c.email,
+            "tipo": c.tipo
+        }
+        for c in contatos
+    ]
+    with open("contatos.json", "w", encoding="utf-8") as arquivo:
+        json.dump(contatos_como_dict, arquivo, indent=4, ensure_ascii=False)
+
+
+
 
 class Gerenciador_Contatos(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.contatos = carregar_contatos()
+
         self.setWindowTitle("Gerenciador de Contatos")
         self.setGeometry(100, 100, 500, 300)
 
@@ -22,7 +54,7 @@ class Gerenciador_Contatos(QWidget):
         self.lbl_filtro = QLabel("Filtro:", self)
         self.input_filtro = QComboBox()
 
-        self.input_filtro.addItems(["Família", "Trabalho", "Amigos"])
+        self.input_filtro.addItems(["Todos", "Família", "Trabalho", "Amigos"])
 
         self.layout_filtro = QHBoxLayout()
         self.layout_filtro.addWidget(self.lbl_filtro)
@@ -44,9 +76,33 @@ class Gerenciador_Contatos(QWidget):
         self.layout_principal.addLayout(self.layout_botoes)
 
         self.setLayout(self.layout_principal)
+
+        self.input_busca.textChanged.connect(self.atualizar_tabela)
+        self.input_filtro.currentIndexChanged.connect(self.atualizar_tabela)
         
-        self.botao_novo_contato.clicked.connect(self.abrir_janela_contato)
-        self.botao_editar_contato.clicked.connect(self.abrir_janela_contato)
+        self.botao_novo_contato.clicked.connect(self.adicionar)
+        self.botao_editar_contato.clicked.connect(self.editar)
+        self.botao_remover_contato.clicked.connect(self.excluir)
+
+        self.atualizar_tabela()
+
+    def atualizar_tabela(self):
+        self.table.setRowCount(0)
+        termo_busca = self.input_busca.text().lower()
+        filtro = self.input_filtro.currentText()
+        for contato in self.contatos:
+            if termo_busca and termo_busca not in contato.nome.lower():
+                continue
+
+            if filtro != "Todos" and contato.tipo != filtro:
+                continue
+
+            linha_contato = self.table.rowCount()
+            self.table.insertRow(linha_contato)
+            self.table.setItem(linha_contato, 0, QTableWidgetItem(contato.nome))
+            self.table.setItem(linha_contato, 1, QTableWidgetItem(contato.telefone))
+            self.table.setItem(linha_contato, 2, QTableWidgetItem(contato.email))
+            self.table.setItem(linha_contato, 3, QTableWidgetItem(contato.tipo))
 
     def abrir_janela_contato(self, contato=None):
         dialogo_contato = QDialog()
@@ -77,6 +133,8 @@ class Gerenciador_Contatos(QWidget):
         layout_janela_contato.addWidget(botao_salvar)
         dialogo_contato.setLayout(layout_janela_contato)
 
+        novo_contato = [contato]
+
         def salvar():
             nome = input_nome.text().strip()
             telefone = input_telefone.text().strip()
@@ -87,28 +145,58 @@ class Gerenciador_Contatos(QWidget):
                 QMessageBox.warning(dialogo_contato, "ERRO", "Nome não pode estar vazio")
             
             else:
+
+                if novo_contato[0]:
+                    novo_contato[0].atualizar_contato(nome, telefone, email, tipo)
+                else:
+                    novo_contato[0] = Contatos(nome, telefone, email, tipo)
+        
                 dialogo_contato.accept()
 
-                if contato:
-                    contato.atualizar_contato(input_nome, input_telefone, input_email, input_tipo)
-                else:
-                    contato = Contatos(nome, telefone, email, tipo)
-            
+
         botao_salvar.clicked.connect(salvar)
 
         if dialogo_contato.exec():
-            return contato
+            return novo_contato[0]
         
         return None
     
     def adicionar(self):
         contato_novo = self.abrir_janela_contato()
 
-        # if contato_novo:
-            #
+        if contato_novo:
+            self.contatos.append(contato_novo)
+            salvar_contatos(self.contatos)
+            self.atualizar_tabela()
 
     def editar(self):
-        contato = self.table.currentRow()
+        linha_contato = self.table.currentRow()
+        if linha_contato < 0:
+            QMessageBox.warning(Gerenciador_Contatos(), "Erro", "Selecione um contato para editar.")
+            return           
+        
+        contato_atual = self.contatos[linha_contato]
+        contato_atual = self.abrir_janela_contato(contato_atual)
+        
+        if contato_atual:
+            self.contatos[linha_contato] = contato_atual
+            salvar_contatos(self.contatos)
+            self.atualizar_tabela()
+    
+    def excluir(self):
+        linha_contato = self.table.currentRow()
+
+        if linha_contato < 0:
+            QMessageBox.warning(Gerenciador_Contatos(), "Erro", "Selecione um contato para excluir.")
+            return
+        
+        resposta = QMessageBox.question(Gerenciador_Contatos(), "Confirmar", "Deseja realmente excluir este contato?")
+        if resposta == QMessageBox.StandardButton.Yes:
+            self.contatos.pop(linha_contato)
+            salvar_contatos(self.contatos)
+            self.atualizar_tabela()
+
+
 class Contatos():
     def __init__(self, nome, telefone, email, tipo):
         self.nome = nome
