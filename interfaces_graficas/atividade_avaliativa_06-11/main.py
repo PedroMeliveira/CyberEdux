@@ -13,7 +13,7 @@ headers = {
 class Dogs(QWidget):
     def __init__(self):
         super().__init__()
-        uic.loadUi("interfaces_graficas/atividade_avaliativa_06-11/pexel_qtdesigner.ui", self)
+        uic.loadUi("interfaces_graficas/atividade_avaliativa_06-11/dogs_qtdesigner.ui", self)
 
         self.racas = []
 
@@ -33,12 +33,25 @@ class Dogs(QWidget):
             self.lista_racas.addItem(raca['name'].capitalize())
 
     def carregar_detalhes_raca(self, item):
-        nome = item.text().capitalize()
-        url = next((r["url"] for r in self.racas if r["name"] == nome), nome)
-        response = requests.get(url)
-        data = response.json
-        print(data)
-        img_url = data
+        nome = item.text().lower()
+        raca = None
+
+        for r in self.racas:
+            if r['name'].lower() == nome:
+                raca = r
+
+        img_url = raca["image"]["url"]
+        img_data = requests.get(img_url).content
+        pixmap = QPixmap()
+        pixmap.loadFromData(img_data)
+        self.label_img.setPixmap(pixmap)
+
+        self.label_img.setScaledContents(True)
+        self.label_name.setText(raca['name'].capitalize())
+        self.label_height.setText(f"Altura: {raca['height']['metric']} cm")
+        self.label_weight.setText(f"Peso: {raca['weight']['metric']} KG")
+        self.label_temp.setText(f"Temperamentos:\n{raca['temperament']}")
+
 
 if __name__ == "__main__":
     app = QApplication([])
