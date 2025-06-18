@@ -32,6 +32,8 @@ class Pokemon(QWidget):
         response = requests.get(url)
         data = response.json()
 
+        print(data["sprites"]["front_default"])
+
         img_url = data["sprites"]["front_default"]
         if img_url:
             img_data = requests.get(img_url).content
